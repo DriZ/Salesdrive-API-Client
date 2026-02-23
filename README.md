@@ -2,6 +2,7 @@
 
 [![npm version](https://badge.fury.io/js/salesdrive-api-client.svg)](https://badge.fury.io/js/salesdrive-api-client)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/DriZ/SalesDriveApiClient/publish.yml?branch=main)](https://github.com/DriZ/SalesDriveApiClient/actions/workflows/publish.yml)
+[![npm bundle size](https://img.shields.io/bundlephobia/minzip/salesdrive-api-client)](https://bundlephobia.com/result?p=salesdrive-api-client)
 
 A modern, typed, and easy-to-use TypeScript client for the [SalesDrive API](https://api.salesdrive.me/api/docs/).
 
@@ -68,4 +69,4 @@ Detailed documentation for all classes, methods, and types is available on [GitH
 
 ## License
 
-This project is licensed under the ISC License.
+This project is licensed under the MIT License.

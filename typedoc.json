@@ -9,6 +9,7 @@
 	"githubPages": true,
 	"excludePrivate": true,
 	"exclude": [
-		"src/test.ts"
+		"src/test.ts",
+		"src/core/constants.ts",
 	]
 }
