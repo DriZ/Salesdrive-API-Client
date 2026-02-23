@@ -57,7 +57,7 @@ export class Client {
 		return this.orders.createOrder(data);
 	}
 
-	async getOrder(id: number): Promise<IOrder> {
+	async getOrder(id: number): Promise<IOrder | SalesDriveError> {
 		return this.orders.getOrder(id);
 	}
 
