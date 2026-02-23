@@ -1,5 +1,5 @@
 import { AxiosInstance, AxiosError } from 'axios';
-import { IGetOrdersResponse, IGetOrdersParams, TStatusIdFilter, IOrder, IDateFilter, SalesDriveDate, DatedOrderParamsFilter, IAddNoteResponse } from '../../types/deals';
+import { IGetOrdersResponse, IGetOrdersParams, TStatusIdFilter, IOrder, IDateFilter, SalesDriveDate, DatedOrderParamsFilter, IAddNoteResponse } from '../../types';
 import { SalesDriveError, type ApiErrorData } from '../errors';
 import { ENDPOINTS } from '../constants';
 
@@ -158,7 +158,7 @@ export class OrderQueryBuilder implements PromiseLike<IGetOrdersResponse> {
 export class OrderService {
 	constructor(private readonly axiosInstance: AxiosInstance) { }
 
-	public get(params?: IGetOrdersParams): OrderQueryBuilder {
+	public getOrders(params?: IGetOrdersParams): OrderQueryBuilder {
 		return new OrderQueryBuilder(this, params);
 	}
 
@@ -194,7 +194,7 @@ export class OrderService {
 		return response.data;
 	}
 
-	public async getOrder(id: number): Promise<IOrder | SalesDriveError> {
+	public async getOrder(id: number): Promise<IOrder> {
 		const response = await this.axiosInstance.get<IGetOrdersResponse>(ENDPOINTS.ORDER.LIST, {
 			params: { 'filter[id]': id }, // API expects filter[id] for single ID
 		});
@@ -212,7 +212,7 @@ export class OrderService {
 		return response.data;
 	}
 
-	public async addNoteToOrder(orderId: number, note: string): Promise<IAddNoteResponse> { // TODO: Type this response
+	public async addNoteToOrder(orderId: number, note: string): Promise<IAddNoteResponse> {
 		const response = await this.axiosInstance.post(ENDPOINTS.ORDER.NOTE, {
 			orderId,
 			note

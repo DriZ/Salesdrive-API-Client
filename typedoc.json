@@ -1,0 +1,14 @@
+{
+	"$schema": "https://typedoc.org/schema.json",
+	"entryPoints": [
+		"src/index.ts"
+	],
+	"out": "docs",
+	"name": "SalesDrive API Client",
+	"readme": "README.md",
+	"githubPages": true,
+	"excludePrivate": true,
+	"exclude": [
+		"src/test.ts"
+	]
+}

@@ -1,0 +1,58 @@
+name: Publish Package and Docs
+
+on:
+  push:
+    branches:
+      - main # Запускать только при пуше в ветку main
+  workflow_dispatch: # Позволяет запускать вручную из интерфейса GitHub
+
+jobs:
+  build_and_publish:
+    name: Build, Publish to NPM & GitHub Pages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write      # Права для развертывания на GitHub Pages
+      id-token: write   # Права для аутентификации
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org' # Указываем реестр npm
+
+      - name: Install dependencies
+        # Используем 'ci' для более быстрых и надежных сборок в CI/CD
+        run: npm ci
+
+      - name: Lint code
+        run: npm run lint
+
+      - name: Build project
+        run: npm run build
+
+      - name: Generate documentation
+        run: npm run docs
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload documentation artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Путь к папке со сгенерированной документацией
+          path: ./docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # - name: Publish to npm
+      #   run: npm publish --access public
+      #   env:
+      #     # Секрет для аутентификации в npm
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

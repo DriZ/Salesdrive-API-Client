@@ -43,12 +43,12 @@ export class Client {
 	}
 
 	/**
-	 * alias fot this.orders.get()
+	 * alias for this.orders.getOrders()
 	 * @param {keyof IGetOrdersParams}params 
 	 * @returns 
 	 */
 	getOrders(params?: IGetOrdersParams): OrderQueryBuilder {
-		return this.orders.get(params);
+		return this.orders.getOrders(params);
 	}
 
 	// Методы ниже теперь делегируются в OrderService

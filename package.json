@@ -2,15 +2,23 @@
 	"name": "salesdrive-api-client",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"scripts": {
 		"build": "tsc && tsc-alias",
 		"docs": "typedoc",
-		"start": "npm run build && node -r dotenv/config dist/index.js",
+		"start": "npm run build && node -r dotenv/config dist/test.js",
 		"dev": "tsx -r dotenv/config index.ts",
 		"lint": "eslint . --ext .ts",
 		"lint:fix": "eslint . --ext .ts --fix",
 		"format": "prettier --write ."
+	},
+	"files": [
+		"dist"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/driz/salesdrive-api-client.git"
 	},
 	"keywords": [
 		"salesdrive",
