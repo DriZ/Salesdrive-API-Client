@@ -2,7 +2,7 @@ import axios, { type AxiosInstance, type AxiosError } from 'axios';
 import axiosRetry from 'axios-retry';
 import { ApiErrorData, SalesDriveError } from './errors';
 import { OrderService, type OrderQueryBuilder } from './services/OrderService';
-import { IGetOrdersParams, IOrder } from '../types';
+import { IAddNoteResponse, IGetOrdersParams, IOrder } from '../types';
 import { ENDPOINTS } from './constants';
 
 
@@ -65,7 +65,7 @@ export class Client {
 		return this.orders.updateOrder(data);
 	}
 
-	async addNoteToOrder(orderId: number, note: string): Promise<any> {
+	async addNoteToOrder(orderId: number, note: string): Promise<IAddNoteResponse> {
 		return this.orders.addNoteToOrder(orderId, note);
 	}
 

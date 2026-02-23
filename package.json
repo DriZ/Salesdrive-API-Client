@@ -9,7 +9,6 @@
 		"prepack": "npm run build",
 		"prepare": "husky",
 		"docs": "typedoc",
-		"start": "npm run build && node -r dotenv/config dist/test.js",
 		"dev": "tsx -r dotenv/config index.ts",
 		"lint": "eslint . --ext .ts",
 		"lint:fix": "eslint . --ext .ts --fix",

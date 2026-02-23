@@ -175,10 +175,10 @@ export class OrderService {
 					const newFilterItem: IDateFilter = { ...filterItem };
 
 					if (newFilterItem.from && typeof newFilterItem.from === 'string') {
-						newFilterItem.from = formatSalesDriveDate(newFilterItem.from, '00:00:00');
+						newFilterItem.from = formatSalesDriveDate(newFilterItem.from, '00:00:00') as SalesDriveDate;
 					}
 					if (newFilterItem.to && typeof newFilterItem.to === 'string') {
-						newFilterItem.to = formatSalesDriveDate(newFilterItem.to, '23:59:59');
+						newFilterItem.to = formatSalesDriveDate(newFilterItem.to, '23:59:59') as SalesDriveDate;
 					}
 					requestParams.filter[field] = newFilterItem;
 				}

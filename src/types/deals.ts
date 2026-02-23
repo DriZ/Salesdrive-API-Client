@@ -192,7 +192,7 @@ export type DateTimeYMDHMS = `${DateYMD} ${number}${number}:${number}${number}:$
  * Позволяет передавать дату (YYYY-MM-DD) или дату со временем (YYYY-MM-DD HH:mm:ss).
  * Использование (string & {}) сохраняет автодополнение для литералов, но разрешает любые строки.
  */
-export type SalesDriveDate = DateYMD | DateTimeYMDHMS | (string & {});
+export type SalesDriveDate = DateYMD | DateTimeYMDHMS | (string & object);
 
 /**
  * Представляет диапазон дат для фильтрации.
