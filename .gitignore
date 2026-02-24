@@ -5,5 +5,5 @@ dist/
 docs/
 coverage/
 *.log
-.idea/
 .vscode/
+tests/
