@@ -1,15 +1,15 @@
 module.exports = {
-  parser: '@typescript-eslint/parser',
+  parser: "@typescript-eslint/parser",
   parserOptions: {
-    project: 'tsconfig.json',
+    project: "tsconfig.json",
     tsconfigRootDir: __dirname,
-    sourceType: 'module',
+    sourceType: "module",
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: ["@typescript-eslint/eslint-plugin"],
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
   ],
   root: true,
   env: {
@@ -17,18 +17,19 @@ module.exports = {
     jest: true,
   },
   ignorePatterns: [
-	'.eslintrc.js', 
-	'dist/', 
-	'docs/', 
-	'node_modules/', 
-	'jest.config.js', 
-	'tsconfig.json',
-	'package.json',
-	'package-lock.json',
-	'orders.test.ts'
-],
+    ".eslintrc.js",
+    "dist/",
+    "coverage/",
+    "docs/",
+    "node_modules/",
+    "jest.config.js",
+    "tsconfig.json",
+    "package.json",
+    "package-lock.json",
+    "tests/"
+  ],
   rules: {
-    '@typescript-eslint/no-explicit-any': 'off', // off, warn, error
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    "@typescript-eslint/no-explicit-any": "off", // off, warn, error
+    "@typescript-eslint/explicit-module-boundary-types": "off",
   },
 };

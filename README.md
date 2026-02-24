@@ -3,6 +3,7 @@
 [![npm version](https://badge.fury.io/js/salesdrive-api-client.svg)](https://badge.fury.io/js/salesdrive-api-client)
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/DriZ/SalesDriveApiClient/publish.yml?branch=main)](https://github.com/DriZ/SalesDriveApiClient/actions/workflows/publish.yml)
 [![npm bundle size](https://img.shields.io/bundlephobia/minzip/salesdrive-api-client)](https://bundlephobia.com/result?p=salesdrive-api-client)
+[![codecov](https://codecov.io/github/DriZ/Salesdrive-API-Client/graph/badge.svg?token=O3ZNTIYZ1Y)](https://codecov.io/github/DriZ/Salesdrive-API-Client)
 
 A modern, typed, and easy-to-use TypeScript client for the [SalesDrive API](https://api.salesdrive.me/api/docs/).
 
@@ -10,11 +11,11 @@ This library simplifies interaction with the SalesDrive CRM by providing a fully
 
 ## Features
 
--   **Fully Typed**: Written in TypeScript for a great developer experience with autocompletion and type safety.
--   **Modern API**: Uses `async/await` and a clean, service-oriented architecture.
--   **Fluent Query Builder**: Easily construct complex queries for fetching orders.
--   **Robust Error Handling**: Throws custom `SalesDriveError` for easier debugging and handling of API errors.
--   **Automatic Retries**: Built-in support for retrying failed requests due to network issues or rate limiting (429).
+- **Fully Typed**: Written in TypeScript for a great developer experience with autocompletion and type safety.
+- **Modern API**: Uses `async/await` and a clean, service-oriented architecture.
+- **Fluent Query Builder**: Easily construct complex queries for fetching orders.
+- **Robust Error Handling**: Throws custom `SalesDriveError` for easier debugging and handling of API errors.
+- **Automatic Retries**: Built-in support for retrying failed requests due to network issues or rate limiting (429).
 
 ## Installation
 
@@ -27,35 +28,38 @@ npm install salesdrive-api-client
 First, you need to get your API Key and domain from your SalesDrive account.
 
 ```typescript
-import { Client, SalesDriveError } from 'salesdrive-api-client';
+import { Client, SalesDriveError } from "salesdrive-api-client";
 
-const apiKey = 'YOUR_API_KEY';
-const domain = 'YOUR_DOMAIN'; // e.g., mycompany
+const apiKey = "YOUR_API_KEY";
+const domain = "YOUR_DOMAIN"; // e.g., mycompany
 
 const client = new Client(apiKey, domain);
 
 async function getRecentOrders() {
   try {
-    const response = await client.orders.getOrders()
-      .status('__NOTDELETED__') // Get all non-deleted orders
-      .updatedAtFrom('2026-02-01')
+    const response = await client.orders
+      .getOrders()
+      .status("__NOTDELETED__") // Get all non-deleted orders
+      .updatedAtFrom("2026-02-01")
       .limit(25)
       .page(1);
 
     console.log(`Found ${response.totals.count} total orders.`);
-    
+
     for (const order of response.data) {
-      console.log(`- Order #${order.id}, Status: ${order.statusId}, Amount: ${order.paymentAmount}`);
+      console.log(
+        `- Order #${order.id}, Status: ${order.statusId}, Amount: ${order.paymentAmount}`,
+      );
     }
   } catch (error) {
     if (error instanceof SalesDriveError) {
-      console.error('API Error:', error.message);
-      console.error('Status Code:', error.statusCode);
+      console.error("API Error:", error.message);
+      console.error("Status Code:", error.statusCode);
       if (error.apiErrors) {
-        console.error('Validation Errors:', error.apiErrors);
+        console.error("Validation Errors:", error.apiErrors);
       }
     } else {
-      console.error('An unexpected error occurred:', error);
+      console.error("An unexpected error occurred:", error);
     }
   }
 }
