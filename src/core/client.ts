@@ -290,7 +290,7 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<IInvoice>>}
    */
-  public async getInvoicesList(params?: IFilterableListParams): Promise<DocumentQueryBuilder<IDocumentListResponse<IInvoice>>> {
+  public getInvoicesList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IInvoice>> {
     return this.documents.getInvoicesList(params);
   }
 
@@ -299,7 +299,7 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>>}
    */
-  public async getSalesInvoiceList(params?: IFilterableListParams): Promise<DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>>> {
+  public getSalesInvoiceList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>> {
     return this.documents.getSalesInvoicesList(params);
   }
 
@@ -308,7 +308,7 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {CashOrdersListBuilder}
    */
-  public async getCashOrderList(params?: IFilterableListParams): Promise<CashOrdersListBuilder> {
+  public getCashOrderList(params?: IFilterableListParams): CashOrdersListBuilder {
     return this.documents.getCashOrdersList(params);
   }
 
@@ -317,16 +317,16 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>>}
    */
-  public async getArrivalProductsList(params?: IFilterableListParams): Promise<DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>>> {
+  public getArrivalProductsList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>> {
     return this.documents.getArrivalProductsList(params);
   }
 
   /**
    * Alias for `client.documents.getActsList()`
-   * @param {IFilterableListParams}params 
+   * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<IAct>>}
    */
-  public async getActsList(params?: IFilterableListParams): Promise<DocumentQueryBuilder<IDocumentListResponse<IAct>>> {
+  public getActsList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IAct>> {
     return this.documents.getActsList(params);
   }
 
@@ -335,16 +335,16 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<IContract>>}
    */
-  public async getContractsList(params?: IFilterableListParams): Promise<DocumentQueryBuilder<IDocumentListResponse<IContract>>> {
+  public getContractsList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IContract>> {
     return this.documents.getContractsList(params);
   }
 
   /**
    * Alias for `client.documents.getChecksList()`
-   * @param {IFilterableListParams}params 
+   * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<ICheck>>}
    */
-  public async getChecksList(params?: IFilterableListParams): Promise<DocumentQueryBuilder<IDocumentListResponse<ICheck>>> {
+  public getChecksList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<ICheck>> {
     return this.documents.getChecksList(params);
   }
 }

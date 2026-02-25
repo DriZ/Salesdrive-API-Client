@@ -42,7 +42,7 @@ client.catch((error) => {
 
 async function getRecentOrders() {
   try {
-    const response = await client.findOrders()
+    const response = await client.findOrders() // or client.orders.find()
       .status("__NOTDELETED__") // Get all non-deleted orders
       .updatedAtFrom("2026-02-01")
       .limit(25)
