@@ -1,8 +1,7 @@
 # SalesDrive API Client
 
 [![npm version](https://badge.fury.io/js/salesdrive-api-client.svg)](https://badge.fury.io/js/salesdrive-api-client)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/DriZ/SalesDriveApiClient/publish.yml?branch=main)](https://github.com/DriZ/SalesDriveApiClient/actions/workflows/publish.yml)
-[![npm bundle size](https://img.shields.io/bundlephobia/minzip/salesdrive-api-client)](https://bundlephobia.com/result?p=salesdrive-api-client)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/DriZ/Salesdrive-API-Client/publish.yml?branch=main)](https://github.com/DriZ/Salesdrive-API-Client/actions/workflows/publish.yml)
 [![codecov](https://codecov.io/github/DriZ/Salesdrive-API-Client/graph/badge.svg?token=O3ZNTIYZ1Y)](https://codecov.io/github/DriZ/Salesdrive-API-Client)
 
 A modern, typed, and easy-to-use TypeScript client for the [SalesDrive API](https://api.salesdrive.me/api/docs/).
@@ -81,7 +80,7 @@ getRecentOrders();
 
 ## API Documentation
 
-Detailed documentation for all classes, methods, and types is available on [GitHub Pages](https://driz.github.io/SalesDriveApiClient/).
+Detailed documentation for all classes, methods, and types is available on [GitHub Pages](https://driz.github.io/Salesdrive-API-Client/).
 
 ## License
 
