@@ -1,3 +1,7 @@
+## [1.2.1](https://github.com/driz/salesdrive-api-client/compare/v1.2.0...v1.2.1) (2026-02-25)
+
+
+
 # [1.2.0](https://github.com/driz/salesdrive-api-client/compare/v1.1.0...v1.2.0) (2026-02-25)
 
 
