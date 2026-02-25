@@ -11,6 +11,8 @@ import {
   IUpdateOrderResponse,
   TOrderUpdate,
   TOrderUpdateData,
+  TOrderCreateFields,
+  ICreateOrderResponse,
 } from "../../types";
 import { SalesDriveError, type ApiErrorData } from "../errors";
 import { ENDPOINTS } from "../constants";
@@ -71,7 +73,7 @@ export class OrderQueryBuilder implements PromiseLike<IGetOrdersResponse> {
 
   /**
    * Фильтр устанавливает начальную дату изменения заявки
-   * @param date дата (YYYY-MM-DD) или дата со временем (YYYY-MM-DD HH:mm:ss)
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
    * @returns {OrderQueryBuilder}
    */
   public updatedAtFrom(date: SalesDriveDate): this {
@@ -83,7 +85,7 @@ export class OrderQueryBuilder implements PromiseLike<IGetOrdersResponse> {
 
   /**
    * Фильтр устанавливает конечную дату изменения заявки
-   * @param date дата (YYYY-MM-DD) или дата со временем (YYYY-MM-DD HH:mm:ss)
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
    * @returns {OrderQueryBuilder}
    */
   public updatedAtTo(date: SalesDriveDate): this {
@@ -95,7 +97,7 @@ export class OrderQueryBuilder implements PromiseLike<IGetOrdersResponse> {
 
   /**
    * Фильтр устанавливает начальную дату создания заявки
-   * @param date дата (YYYY-MM-DD) или дата со временем (YYYY-MM-DD HH:mm:ss)
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
    * @returns {OrderQueryBuilder}
    */
   public orderTimeFrom(date: SalesDriveDate): this {
@@ -107,7 +109,7 @@ export class OrderQueryBuilder implements PromiseLike<IGetOrdersResponse> {
 
   /**
    * Фильтр устанавливает конечную дату создания заявки
-   * @param date дата (YYYY-MM-DD) или дата со временем (YYYY-MM-DD HH:mm:ss)
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
    * @returns {OrderQueryBuilder}
    */
   public orderTimeTo(date: SalesDriveDate): this {
@@ -167,7 +169,7 @@ export class OrderQueryBuilder implements PromiseLike<IGetOrdersResponse> {
 
   /**
    * Фильтр устанавливает начальную дату изменения статуса заявки
-   * @param date дата (YYYY-MM-DD) или дата со временем (YYYY-MM-DD HH:mm:ss)
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
    * @example setStatusTimeFrom("2025-01-01 10:15:00")
    * @returns {OrderQueryBuilder}
    */
@@ -180,8 +182,9 @@ export class OrderQueryBuilder implements PromiseLike<IGetOrdersResponse> {
 
   /**
    * Фильтр устанавливает конечную дату изменения статуса заявки
-   * @param date дата (YYYY-MM-DD) или дата со временем (YYYY-MM-DD HH:mm:ss)
+   * @param date Date() дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
    * @example setStatusTimeTo("2025-01-01 10:15:00")
+   * @example setStatusTimeTo(new Date().setMonth(2))
    * @returns {OrderQueryBuilder}
    */
   public setStatusTimeTo(date: SalesDriveDate): this {
@@ -244,15 +247,13 @@ export class OrderQueryBuilder implements PromiseLike<IGetOrdersResponse> {
 }
 
 export class OrderService {
-  constructor(private readonly axiosInstance: AxiosInstance) {}
+  constructor(private readonly axiosInstance: AxiosInstance) { }
 
   public find(params?: IGetOrdersParams): OrderQueryBuilder {
     return new OrderQueryBuilder(this, params);
   }
 
-  public async fetchOrders(
-    params?: IGetOrdersParams,
-  ): Promise<IGetOrdersResponse> {
+  public async fetchOrders(params?: IGetOrdersParams): Promise<IGetOrdersResponse> {
     const requestParams = params ? { ...params } : {};
 
     if (requestParams.filter) {
@@ -270,17 +271,17 @@ export class OrderService {
         if (filterItem) {
           const newFilterItem: IDateFilter = { ...filterItem };
 
-          if (newFilterItem.from && typeof newFilterItem.from === "string") {
+          if (newFilterItem.from) {
             newFilterItem.from = formatSalesDriveDate(
               newFilterItem.from,
               "00:00:00",
-            ) as SalesDriveDate;
+            );
           }
-          if (newFilterItem.to && typeof newFilterItem.to === "string") {
+          if (newFilterItem.to) {
             newFilterItem.to = formatSalesDriveDate(
               newFilterItem.to,
               "23:59:59",
-            ) as SalesDriveDate;
+            );
           }
           requestParams.filter[field] = newFilterItem;
         }
@@ -294,15 +295,32 @@ export class OrderService {
     return response.data;
   }
 
-  public async create(data: Partial<IOrder>): Promise<IOrder> {
-    const response = await this.axiosInstance.post<IOrder>(
+  /**
+   * Создает новую заявку
+   * @param {Partial<TOrderCreateFields>}data Объект полей заявки
+   * @returns {Promise<number | null>} Вовзращает ID созданной заявки или null в случае неудачи
+   */
+  public async create(data: Partial<TOrderCreateFields>): Promise<number | null> {
+    const response = await this.axiosInstance.post<ICreateOrderResponse>(
       ENDPOINTS.ORDER.CREATE,
       data,
     );
-    return response.data;
+
+    if (response.data?.error) {
+      throw new SalesDriveError({
+        message: response.data.error,
+        response: { status: 400, data: { message: response.data.error } },
+      } as AxiosError<ApiErrorData>);
+    }
+    return response.data.data?.orderId ?? null;
   }
 
-  public async findById(id: number): Promise<IOrder> {
+  /**
+   * Ищет заявку по её ID
+   * @param {number}id
+   * @returns {Promise<IOrder | null>} Возвращает заявку или null, если заявка не найдена
+   */
+  public async findById(id: number): Promise<IOrder | null> {
     const response = await this.axiosInstance.get<IGetOrdersResponse>(
       ENDPOINTS.ORDER.LIST,
       {
@@ -318,25 +336,16 @@ export class OrderService {
     if (response.data.data && response.data.data.length > 0) {
       return response.data.data[0];
     }
-    throw new SalesDriveError({
-      message: `Order with ID ${id} not found.`,
-      response: {
-        status: 404,
-        data: { message: `Order with ID ${id} not found.` },
-      },
-    } as AxiosError<ApiErrorData>);
+    return null;
   }
 
   /**
    * Обновляет поля заявки
    * @param {number | string}id ID заявки как number или внешний ID заявки как string
    * @param {TOrderUpdateData}fields объект полей, которые нужно обновить в заявке
-   * @returns {Promise<boolean>}Результат обновления, true если заявка найдена и обновлена
+   * @returns {Promise<boolean>} Результат обновления, true если заявка найдена и обновлена
    */
-  public async update(
-    id: number | string,
-    fields: TOrderUpdateData,
-  ): Promise<boolean> {
+  public async update(id: number | string, fields: TOrderUpdateData): Promise<boolean> {
     const params: TOrderUpdate =
       typeof id === "number"
         ? { id: id, data: fields }
@@ -347,7 +356,9 @@ export class OrderService {
       params,
     );
 
-    return response.data.success;
+    if (response.data.message) return false;
+
+    return response.data.success ?? false;
   }
 
   /**
@@ -356,14 +367,15 @@ export class OrderService {
    * @param note Текст комментария
    * @returns
    */
-  public async addNote(
-    orderId: IOrder["id"],
-    note: IOrder["comment"],
-  ): Promise<IAddNoteResponse> {
-    const response = await this.axiosInstance.post(ENDPOINTS.ORDER.NOTE, {
+  public async addNote(orderId: IOrder["id"], note: IOrder["comment"]): Promise<IAddNoteResponse> {
+    const response = await this.axiosInstance.post<IAddNoteResponse>(ENDPOINTS.ORDER.NOTE, {
       orderId,
       note,
     });
+    if (!response.data.success) throw new SalesDriveError({
+      message: response.data.message,
+      response: { status: 400, data: { message: response.data.message } },
+    } as AxiosError<ApiErrorData>);
     return response.data;
   }
 }

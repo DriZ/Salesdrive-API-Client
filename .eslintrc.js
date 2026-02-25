@@ -26,7 +26,8 @@ module.exports = {
     "tsconfig.json",
     "package.json",
     "package-lock.json",
-    "tests/"
+    "tests/",
+    "index.js"
   ],
   rules: {
     "@typescript-eslint/no-explicit-any": "off", // off, warn, error

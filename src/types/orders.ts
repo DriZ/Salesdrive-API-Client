@@ -1,4 +1,4 @@
-import { IProductUpdateFields } from ".";
+import { ICreateOrderProductFields, IProductUpdateFields } from ".";
 
 /**
  * Представляет продукт в составе заявки.
@@ -48,10 +48,10 @@ export interface IOrderDeliveryData {
   house: string;
   flat: string;
   address: string;
-  payer: string;
+  payer: "Sender" | "Recipient";
   hasPostpay: number;
   postpaySum: number;
-  postpayPayer: string;
+  postpayPayer: "Sender" | "Recipient";
   paymentMethod: string;
   cargoType: string;
   ukrposhtaType?: string;
@@ -143,6 +143,77 @@ export interface IOrder {
   [key: string]: any;
 }
 
+export type TOrderCreateFields = {
+  getResultData: 0 | 1,
+  lName: string,
+  fName: string,
+  mName: string,
+  phone: string,
+  email: string,
+  company: string,
+  dateOfBirth: string,
+  products: ICreateOrderProductFields[],
+  payment_method: string,
+  shipping_method: string,
+  shipping_address: string,
+  comment: string,
+  externalId: string,
+  sajt: string,
+  novaposhta: {
+    ServiceType: string,
+    payer: string,
+    area: string,
+    region: string,
+    city: string,
+    cityNameFormat: string,
+    WarehouseNumber: string,
+    Street: string,
+    BuildingNumber: string,
+    Flat: string,
+    ttn: string
+  },
+  ukrposhta: {
+    ServiceType: string,
+    payer: string,
+    type: string,
+    city: string,
+    WarehouseNumber: string,
+    Street: string,
+    BuildingNumber: string,
+    Flat: string,
+    ttn: string
+  },
+  meest: {
+    ServiceType: string,
+    payer: string,
+    area: string,
+    city: string,
+    WarehouseNumber: string,
+    ttn: string
+  },
+  rozetka_delivery: {
+    WarehouseNumber: string,
+    payer: string,
+    ttn: string
+  },
+  con_comment: string,
+  con_telegram: string,
+  stockId: number,
+  commission: number,
+  costPrice: number,
+  shipping_costs: number,
+  organizationId: number,
+  salesdrive_manager: number,
+  utmSourceFull: string,
+  utmSource: string,
+  utmMedium: string,
+  utmCampaign: string,
+  utmContent: string,
+  utnTerm: string,
+  utmPage: string
+  [key: string]: any;
+}
+
 /**
  * Представляет поля заявки, которые можно обновлять.
  */
@@ -174,36 +245,36 @@ export type TOrderUpdateFields = Partial<
  */
 export type TUpdatePostTTN =
   | {
-      novaposhta: { ttn: string };
-      ukrposhta?: never;
-      meest?: never;
-      rozetka_delivery?: never;
-    }
+    novaposhta: { ttn: string };
+    ukrposhta?: never;
+    meest?: never;
+    rozetka_delivery?: never;
+  }
   | {
-      novaposhta?: never;
-      ukrposhta: { ttn: string };
-      meest?: never;
-      rozetka_delivery?: never;
-    }
+    novaposhta?: never;
+    ukrposhta: { ttn: string };
+    meest?: never;
+    rozetka_delivery?: never;
+  }
   | {
-      novaposhta?: never;
-      ukrposhta?: never;
-      meest: { ttn: string };
-      rozetka_delivery?: never;
-    }
+    novaposhta?: never;
+    ukrposhta?: never;
+    meest: { ttn: string };
+    rozetka_delivery?: never;
+  }
   | {
-      novaposhta?: never;
-      ukrposhta?: never;
-      meest?: never;
-      rozetka_delivery: { ttn: string };
-    }
+    novaposhta?: never;
+    ukrposhta?: never;
+    meest?: never;
+    rozetka_delivery: { ttn: string };
+  }
   // Этот вариант соответствует случаю, когда ни один ttn не предоставлен
   | {
-      novaposhta?: never;
-      ukrposhta?: never;
-      meest?: never;
-      rozetka_delivery?: never;
-    };
+    novaposhta?: never;
+    ukrposhta?: never;
+    meest?: never;
+    rozetka_delivery?: never;
+  };
 
 /**
  * Представляет поля заявки, которые можно обновлять.
@@ -219,13 +290,13 @@ export type TOrderUpdateData = TOrderUpdateFields &
  */
 export type TOrderUpdate = (
   | {
-      id: number;
-      externalId?: never;
-    }
+    id: number;
+    externalId?: never;
+  }
   | {
-      id?: never;
-      externalId: string;
-    }
+    id?: never;
+    externalId: string;
+  }
 ) & {
   data: TOrderUpdateData;
 };
@@ -234,7 +305,21 @@ export type TOrderUpdate = (
  * Представляет ответ после обновления заявки.
  */
 export interface IUpdateOrderResponse {
-  success: boolean;
+  success?: boolean;
+  status?: string;
+  message?: string;
+}
+
+/**
+ * Представляет ответ после создания заявки.
+ */
+export interface ICreateOrderResponse {
+  error?: string;
+  success?: boolean;
+  data?: {
+    orderId: number;
+    userId: number;
+  }
 }
 
 /**
@@ -293,7 +378,8 @@ export type DateTimeYMDHMS =
  * Позволяет передавать дату (YYYY-MM-DD) или дату со временем (YYYY-MM-DD HH:mm:ss).
  * Использование (string & {}) сохраняет автодополнение для литералов, но разрешает любые строки.
  */
-export type SalesDriveDate = DateYMD | DateTimeYMDHMS | (string & object);
+export type SalesDriveDate = Date | DateYMD | DateTimeYMDHMS | `${number}-${string}-${string} ${string}:${string}:${string}` | (string & object);
+export type FormatedSalesDriveDate = DateYMD | DateTimeYMDHMS | `${number}-${string}-${string} ${string}:${string}:${string}`;
 
 /**
  * Представляет диапазон дат для фильтрации.

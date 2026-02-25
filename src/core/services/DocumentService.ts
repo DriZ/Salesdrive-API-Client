@@ -20,16 +20,33 @@ export class InvoicesListBuilder implements PromiseLike<IGetInvoicesListResponse
     }
   }
 
+  /**
+   * Фильтр устанавливает номер страницы
+   * alias for page
+   * @param {number}page
+   * @returns {InvoicesListBuilder}
+   */
   public page(page: number): this {
     this.params.page = page;
     return this;
   }
 
+  /**
+   * Фильтр устанавливает количество результатов на странице
+   * @param {number}limit От 1 до 100
+   * @default 50
+   * @returns {InvoicesListBuilder}
+   */
   public limit(limit: number): this {
     this.params.limit = limit;
     return this;
   }
 
+  /**
+   * Фильтрует по начальной дате изменения документа
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
+   * @returns {InvoicesListBuilder}
+   */
   public updatedAtFrom(date: SalesDriveDate): this {
     this.ensureFilterObject();
     this.ensureDateFilter("updatedAt");
@@ -37,6 +54,11 @@ export class InvoicesListBuilder implements PromiseLike<IGetInvoicesListResponse
     return this;
   }
 
+  /**
+   * Фильтрует по конечной дате изменения документа
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
+   * @returns {InvoicesListBuilder}
+   */
   public updatedAtTo(date: SalesDriveDate): this {
     this.ensureFilterObject();
     this.ensureDateFilter("updatedAt");
@@ -44,6 +66,11 @@ export class InvoicesListBuilder implements PromiseLike<IGetInvoicesListResponse
     return this;
   }
 
+  /**
+   * Фильтрует по начальной дате документа
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
+   * @returns {InvoicesListBuilder}
+   */
   public dateFrom(date: SalesDriveDate): this {
     this.ensureFilterObject();
     this.ensureDateFilter("date");
@@ -51,6 +78,11 @@ export class InvoicesListBuilder implements PromiseLike<IGetInvoicesListResponse
     return this;
   }
 
+  /**
+   * Фильтрует по конечной дате документа
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
+   * @returns {InvoicesListBuilder}
+   */
   public dateTo(date: SalesDriveDate): this {
     this.ensureFilterObject();
     this.ensureDateFilter("date");
@@ -58,6 +90,11 @@ export class InvoicesListBuilder implements PromiseLike<IGetInvoicesListResponse
     return this;
   }
 
+  /**
+   * Фильтрует по начальной дате создания документа
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
+   * @returns {InvoicesListBuilder}
+   */
   public createdAtFrom(date: SalesDriveDate): this {
     this.ensureFilterObject();
     this.ensureDateFilter("createdAt");
@@ -65,6 +102,11 @@ export class InvoicesListBuilder implements PromiseLike<IGetInvoicesListResponse
     return this;
   }
 
+  /**
+   * Фильтрует по конечной дате создания документа
+   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
+   * @returns {InvoicesListBuilder}
+   */
   public createdAtTo(date: SalesDriveDate): this {
     this.ensureFilterObject();
     this.ensureDateFilter("createdAt");
@@ -72,6 +114,11 @@ export class InvoicesListBuilder implements PromiseLike<IGetInvoicesListResponse
     return this;
   }
 
+  /**
+   * Фильтрует по ID организации
+   * @param {number | number[]}ids
+   * @returns {InvoicesListBuilder}
+   */
   public organizationId(ids: number | number[]): this {
     this.ensureFilterObject();
     this.params.filter!.organizationId = Array.isArray(ids) ? ids : [ids];
@@ -122,7 +169,7 @@ export class InvoicesListBuilder implements PromiseLike<IGetInvoicesListResponse
 }
 
 export class DocumentService {
-  constructor(private readonly axiosInstance: AxiosInstance) {}
+  constructor(private readonly axiosInstance: AxiosInstance) { }
 
   /**
    * @return {InvoicesListBuilder} - Returns query builder for invoices list
@@ -151,17 +198,17 @@ export class DocumentService {
         const filterItem = requestParams.filter[field];
         if (filterItem) {
           const newFilterItem = { ...filterItem };
-          if (newFilterItem.from && typeof newFilterItem.from === "string") {
+          if (newFilterItem.from) {
             newFilterItem.from = formatSalesDriveDate(
               newFilterItem.from,
               "00:00:00",
-            ) as SalesDriveDate;
+            );
           }
-          if (newFilterItem.to && typeof newFilterItem.to === "string") {
+          if (newFilterItem.to) {
             newFilterItem.to = formatSalesDriveDate(
               newFilterItem.to,
               "23:59:59",
-            ) as SalesDriveDate;
+            );
           }
           requestParams.filter[field] = newFilterItem;
         }

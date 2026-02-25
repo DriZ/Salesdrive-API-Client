@@ -11,9 +11,13 @@ import { WebhookService } from "./services/WebhookService";
 import type { OrderQueryBuilder } from "./services/OrderService";
 import type {
   IAddNoteResponse,
+  ICategory,
   ICurrency,
   IGetOrdersParams,
   IOrder,
+  IProductData,
+  IProductOrCategoryResponse,
+  TOrderCreateFields,
   TOrderUpdateData,
 } from "../types";
 
@@ -79,32 +83,31 @@ export class Client {
 
   /**
    * Alias for `client.orders.create()`
-   * @param {Partial<IOrder>}data
-   * @returns
+   * Создает новую заявку
+   * @param {Partial<TOrderCreateFields>}data Объект полей заявки
+   * @returns {Promise<number | null>} Вовзращает ID созданной заявки или null в случае неудачи
    */
-  public async createOrder(data: Partial<IOrder>): Promise<IOrder> {
+  public async createOrder(data: Partial<TOrderCreateFields>): Promise<number | null> {
     return this.orders.create(data);
   }
 
   /**
    * Alias for `client.orders.findById()`
    * @param {number}id
-   * @returns
+   * @returns {Promise<IOrder | null>} Возвращает заявку или null, если такой заяки не найдено
    */
-  public async findOrderById(id: number): Promise<IOrder> {
+  public async findOrderById(id: number): Promise<IOrder | null> {
     return this.orders.findById(id);
   }
 
   /**
+   * Обновляет поля заявки
    * Alias for `client.orders.update()`
    * @param {number | string}id ID заявки как number или внешний ID заявки как string
    * @param {TOrderUpdateData}fields объект полей, которые нужно обновить в заявке
-   * @returns {Promise<boolean>}Результат обновления, true если заявка найдена и обновлена
+   * @returns {Promise<boolean>} Результат обновления, true если заявка найдена и обновлена
    */
-  public async updateOrder(
-    id: number | string,
-    fields: TOrderUpdateData,
-  ): Promise<boolean> {
+  public async updateOrder(id: number | string, fields: TOrderUpdateData): Promise<boolean> {
     return this.orders.update(id, fields);
   }
 
@@ -112,13 +115,74 @@ export class Client {
    * Alias for `client.orders.addNote()`
    * @param {number}orderId
    * @param {string}note
-   * @returns
+   * @returns {IAddNoteResponse}
    */
-  public async addNoteToOrder(
-    orderId: number,
-    note: string,
-  ): Promise<IAddNoteResponse> {
+  public async addNoteToOrder(orderId: number, note: string): Promise<IAddNoteResponse> {
     return this.orders.addNote(orderId, note);
+  }
+
+  /**
+   * Alias for `client.products.createProducts()`
+   * @param {IProductData[]}products
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async createProducts(products: IProductData[]): Promise<IProductOrCategoryResponse> {
+    return this.products.createProducts(products);
+  }
+
+  /**
+   * Alias for `client.products.updateProducts()`
+   * @param {Partial<IProductData>[]}products массив из объектов полей товаров
+   * @param {keyof IProductData[]}dontUpdateFields массив полей товаров, которые не нужно обновлять
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async updateProducts(
+    products: (Pick<IProductData, "id"> & Partial<IProductData>)[],
+    dontUpdateFields?: (keyof IProductData)[],
+  ): Promise<IProductOrCategoryResponse> {
+    return this.products.updateProducts(products, dontUpdateFields);
+  }
+
+  /**
+   * Alias for `client.products.deleteProducts()`
+   * @param {string[]}productIds массив из ID товаров
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async deleteProducts(productIds: string[]): Promise<IProductOrCategoryResponse> {
+    return this.products.deleteProducts(productIds);
+  }
+
+  /**
+   * Alias for `client.products.createCategories()`
+   * @param {Omit<ICategory, "id">[]}data
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async createCategories(
+    data: Omit<ICategory, "id">[]
+  ): Promise<IProductOrCategoryResponse> {
+    return this.products.createCategories(data);
+  }
+
+  /**
+   * Alias for `client.products.updateCategories()`
+   * @param {Partial<Omit<ICategory, "id">>[]}data массив объектов полей категорий
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async updateCategories(
+    data: (Pick<ICategory, "id"> & Partial<Omit<ICategory, "id">>)[]
+  ): Promise<IProductOrCategoryResponse> {
+    return this.products.updateCategories(data);
+  }
+
+  /**
+   * Alias for `client.products.deleteCategories()`
+   * @param {number[]}categoryIds массив из ID категорий
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async deleteCategories(
+    categoryIds: number[]
+  ): Promise<IProductOrCategoryResponse> {
+    return this.products.deleteCategories(categoryIds);
   }
 
   public async getCurrencies(): Promise<ICurrency[]> {
