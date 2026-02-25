@@ -14,6 +14,14 @@ This library simplifies interaction with the SalesDrive CRM by providing a fully
 - **Fully Typed**: Written in TypeScript for a great developer experience with autocompletion and type safety.
 - **Modern API**: Uses `async/await` and a clean, service-oriented architecture.
 - **Fluent Query Builder**: Easily construct complex queries for fetching orders, documents, and more.
+- **Comprehensive Services**: Covers major parts of the SalesDrive API:
+  - `orders`: Create, find, and update orders.
+  - `products`: Manage products and categories.
+  - `documents`: Fetch various document types (invoices, acts, etc.).
+  - `payments`: Create payments and fetch payment lists.
+  - `utils`: Get auxiliary data like statuses, currencies, and delivery methods.
+  - `managers`: Find managers.
+  - `webhooks`: Send data to webhooks.
 - **Robust Error Handling**: Throws custom `SalesDriveError` for easier debugging and handling of API errors.
 - **Automatic Retries**: Built-in support for retrying failed requests due to network issues or rate limiting (429).
 
