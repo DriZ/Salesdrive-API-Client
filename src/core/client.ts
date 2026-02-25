@@ -1,226 +1,350 @@
-import axios, { type AxiosInstance, type AxiosError } from 'axios';
-import axiosRetry from 'axios-retry';
-import { ApiErrorData, SalesDriveError } from './errors';
-import { OrderService, type OrderQueryBuilder } from './services/OrderService';
-import { IGetOrdersParams, IOrder } from '../types';
-import { ENDPOINTS } from './constants';
-
+import axios, { type AxiosInstance, type AxiosError } from "axios";
+import axiosRetry from "axios-retry";
+import { ApiErrorData, SalesDriveError } from "./errors";
+import { OrderService } from "./services/OrderService";
+import { UtilityService } from "./services/UtilityService";
+import { ProductService } from "./services/ProductService";
+import { DocumentService } from "./services/DocumentService";
+import { PaymentService } from "./services/PaymentService";
+import { ManagerService } from "./services/ManagerService";
+import { WebhookService } from "./services/WebhookService";
+import type { OrderQueryBuilder } from "./services/QueryBuilders/OrderQueryBuilder";
+import type {
+  IAct,
+  IAddNoteResponse,
+  IArrivalProduct,
+  ICategory,
+  ICheck,
+  IContract,
+  ICreatePaymentParams,
+  ICurrenciesResponse,
+  ICurrency,
+  IDeliveryMethodsErrorResponse,
+  IDeliveryMethodsResponse,
+  IDocumentListResponse,
+  IFilterableListParams,
+  IGetCurrenciesResponse,
+  IGetOrdersParams,
+  IInvoice,
+  IOrder,
+  IPaymentListParams,
+  IPaymentListResponse,
+  IPaymentMethodsErrorResponse,
+  IPaymentMethodsResponse,
+  IProductData,
+  IProductOrCategoryResponse,
+  ISalesInvoice,
+  IStatusesErrorResponse,
+  IStatusesResponse,
+  TCreatePaymentResponse,
+  TGetManagerByPhoneResponse,
+  TOrderCreateFields,
+  TOrderUpdateData,
+} from "../types";
+import { CashOrdersListBuilder, DocumentQueryBuilder } from "./services/QueryBuilders";
 
 export class Client {
-	private readonly axiosInstance: AxiosInstance;
+  private readonly axiosInstance: AxiosInstance;
+  private globalErrorHandler?: (error: SalesDriveError) => void;
 
-	public readonly orders: OrderService; // Новый сервис для работы с заявками
+  public readonly orders: OrderService;
+  public readonly products: ProductService;
+  public readonly documents: DocumentService;
+  public readonly payments: PaymentService;
+  public readonly managers: ManagerService;
+  public readonly webhooks: WebhookService;
+  public readonly utils: UtilityService;
 
-	constructor(apiKey: string, domain: string) {
-		this.axiosInstance = axios.create({
-			baseURL: `https://${domain}.salesdrive.me/`,
-			headers: {
-				'X-Api-Key': apiKey,
-				'Content-Type': 'application/json',
-			},
-		});
+  constructor(apiKey: string, domain: string) {
+    this.axiosInstance = axios.create({
+      baseURL: `https://${domain}.salesdrive.me/`,
+      headers: {
+        "X-Api-Key": apiKey,
+        "Content-Type": "application/json",
+      },
+    });
 
-		// Настройка автоматических повторных попыток
-		axiosRetry(this.axiosInstance, {
-			retries: 3, // Количество попыток
-			retryDelay: axiosRetry.exponentialDelay, // Экспоненциальная задержка (1s, 2s, 4s...)
-			retryCondition: (error) => {
-				// Повторять при сетевых ошибках или 429 (Too Many Requests)
-				return axiosRetry.isNetworkOrIdempotentRequestError(error) || error.response?.status === 429;
-			},
-		});
+    axiosRetry(this.axiosInstance, {
+      retries: 3,
+      retryDelay: axiosRetry.exponentialDelay,
+      retryCondition: (error) => {
+        return (
+          axiosRetry.isNetworkOrIdempotentRequestError(error) ||
+          error.response?.status === 429
+        );
+      },
+    });
 
-		// Глобальный перехватчик для улучшения читаемости ошибок
-		this.axiosInstance.interceptors.response.use(
-			(response) => response,
-			(error: AxiosError<ApiErrorData>) => {
-				return Promise.reject(new SalesDriveError(error));
-			}
-		);
+    this.axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error: AxiosError<ApiErrorData>) => {
+        const sdkError = new SalesDriveError(error);
+        if (this.globalErrorHandler) {
+          this.globalErrorHandler(sdkError);
+        }
+        return Promise.reject(sdkError);
+      },
+    );
 
-		// Инициализация сервисов
-		this.orders = new OrderService(this.axiosInstance);
-	}
+    this.orders = new OrderService(this.axiosInstance);
+    this.products = new ProductService(this.axiosInstance);
+    this.documents = new DocumentService(this.axiosInstance);
+    this.payments = new PaymentService(this.axiosInstance);
+    this.managers = new ManagerService(this.axiosInstance);
+    this.webhooks = new WebhookService(this.axiosInstance);
+    this.utils = new UtilityService(this.axiosInstance);
+  }
 
-	/**
-	 * alias for this.orders.getOrders()
-	 * @param {keyof IGetOrdersParams}params 
-	 * @returns 
-	 */
-	getOrders(params?: IGetOrdersParams): OrderQueryBuilder {
-		return this.orders.getOrders(params);
-	}
+  /**
+   * Registers a global error handler for API requests.
+   * @param handler Function to handle errors
+   */
+  public catch(handler: (error: SalesDriveError) => void): this {
+    this.globalErrorHandler = handler;
+    return this;
+  }
 
-	// Методы ниже теперь делегируются в OrderService
+  /**
+   * Alias for `client.orders.find()`
+   * @param {keyof IGetOrdersParams}params
+   * @returns
+   */
+  public findOrders(params?: IGetOrdersParams): OrderQueryBuilder {
+    return this.orders.find(params);
+  }
 
-	async createOrder(data: Partial<IOrder>): Promise<IOrder> {
-		return this.orders.createOrder(data);
-	}
+  /**
+   * Alias for `client.orders.create()`
+   * Создает новую заявку
+   * @param {Partial<TOrderCreateFields>}data Объект полей заявки
+   * @returns {Promise<number | null>} Вовзращает ID созданной заявки или null в случае неудачи
+   */
+  public async createOrder(data: Partial<TOrderCreateFields>): Promise<number | null> {
+    return this.orders.create(data);
+  }
 
-	async getOrder(id: number): Promise<IOrder> {
-		return this.orders.getOrder(id);
-	}
+  /**
+   * Alias for `client.orders.findById()`
+   * @param {number}id
+   * @returns {Promise<IOrder | null>} Возвращает заявку или null, если такой заяки не найдено
+   */
+  public async findOrderById(id: number): Promise<IOrder | null> {
+    return this.orders.findById(id);
+  }
 
-	async updateOrder(data: Partial<IOrder>): Promise<IOrder> {
-		return this.orders.updateOrder(data);
-	}
+  /**
+   * Обновляет поля заявки
+   * Alias for `client.orders.update()`
+   * @param {number | string}id ID заявки как number или внешний ID заявки как string
+   * @param {TOrderUpdateData}fields объект полей, которые нужно обновить в заявке
+   * @returns {Promise<boolean>} Результат обновления, true если заявка найдена и обновлена
+   */
+  public async updateOrder(id: number | string, fields: TOrderUpdateData): Promise<boolean> {
+    return this.orders.update(id, fields);
+  }
 
-	async addNoteToOrder(orderId: number, note: string): Promise<any> {
-		return this.orders.addNoteToOrder(orderId, note);
-	}
+  /**
+   * Alias for `client.orders.addNote()`
+   * @param {number}orderId
+   * @param {string}note
+   * @returns {IAddNoteResponse}
+   */
+  public async addNoteToOrder(orderId: number, note: string): Promise<IAddNoteResponse> {
+    return this.orders.addNote(orderId, note);
+  }
 
-	/**
-	 * @param data - Data for product
-	 * @return {Promise<any>} - Returns created product
-	 */
-	async createProduct(data: any): Promise<any> {
-		const response = await this.axiosInstance.post(ENDPOINTS.PRODUCT.HANDLER, data);
-		return response.data;
-	}
+  /**
+   * Alias for `client.products.createProducts()`
+   * @param {IProductData[]}products
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async createProducts(products: IProductData[]): Promise<IProductOrCategoryResponse> {
+    return this.products.createProducts(products);
+  }
 
-	/**
-	 * @param data - Data for category
-	 * @return {Promise<any>} - Returns created category
-	 */
-	async createCategory(data: any): Promise<any> {
-		const response = await this.axiosInstance.post(ENDPOINTS.CATEGORY.HANDLER, data);
-		return response.data;
-	}
+  /**
+   * Alias for `client.products.updateProducts()`
+   * @param {Partial<IProductData>[]}products массив из объектов полей товаров
+   * @param {keyof IProductData[]}dontUpdateFields массив полей товаров, которые не нужно обновлять
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async updateProducts(
+    products: (Pick<IProductData, "id"> & Partial<IProductData>)[],
+    dontUpdateFields?: (keyof IProductData)[],
+  ): Promise<IProductOrCategoryResponse> {
+    return this.products.updateProducts(products, dontUpdateFields);
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns currencies
-	 */
-	async getCurrencies(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.CURRENCIES);
-		return response.data;
-	}
+  /**
+   * Alias for `client.products.deleteProducts()`
+   * @param {string[]}productIds массив из ID товаров
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async deleteProducts(productIds: string[]): Promise<IProductOrCategoryResponse> {
+    return this.products.deleteProducts(productIds);
+  }
 
-	/**
-	 * @param data - Data for currencies
-	 * @return {Promise<any>} - Returns updated currencies
-	 */
-	async updateCurrencies(data: any): Promise<any> {
-		const response = await this.axiosInstance.post(ENDPOINTS.CURRENCIES, data);
-		return response.data;
-	}
+  /**
+   * Alias for `client.products.createCategories()`
+   * @param {Omit<ICategory, "id">[]}data
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async createCategories(
+    data: Omit<ICategory, "id">[]
+  ): Promise<IProductOrCategoryResponse> {
+    return this.products.createCategories(data);
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns payment methods
-	 */
-	async getPaymentMethods(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.PAYMENT_METHODS);
-		return response.data;
-	}
+  /**
+   * Alias for `client.products.updateCategories()`
+   * @param {Partial<Omit<ICategory, "id">>[]}data массив объектов полей категорий
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async updateCategories(
+    data: (Pick<ICategory, "id"> & Partial<Omit<ICategory, "id">>)[]
+  ): Promise<IProductOrCategoryResponse> {
+    return this.products.updateCategories(data);
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns delivery methods
-	 */
-	async getDeliveryMethods(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.DELIVERY_METHODS);
-		return response.data;
-	}
+  /**
+   * Alias for `client.products.deleteCategories()`
+   * @param {number[]}categoryIds массив из ID категорий
+   * @returns {IProductOrCategoryResponse}
+   */
+  public async deleteCategories(
+    categoryIds: number[]
+  ): Promise<IProductOrCategoryResponse> {
+    return this.products.deleteCategories(categoryIds);
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns statuses
-	 */
-	async getStatuses(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.STATUSES);
-		return response.data;
-	}
+  /**
+   * Alias for `client.utils.getCurrencies()`
+   * @returns {Promise<IGetCurrenciesResponse | ICurrenciesResponse>}
+   */
+  public async getCurrencies(): Promise<IGetCurrenciesResponse | ICurrenciesResponse> {
+    return this.utils.getCurrencies();
+  }
 
-	/**
-	 * @param data - Data for payment
-	 * @return {Promise<any>} - Returns created payment
-	 */
-	async createPayment(data: any): Promise<any> {
-		const response = await this.axiosInstance.post(ENDPOINTS.PAYMENT.CREATE, data);
-		return response.data;
-	}
+  /**
+   * Alias for `client.utils.updateCurrencies()`
+   * @param {Partial<ICurrency>[]}data массив объектов полей валют
+   * @returns {Promise<any>}
+   */
+  public async updateCurrencies(data: Partial<ICurrency>[]): Promise<any> {
+    return this.utils.updateCurrencies(data);
+  }
 
-	/**
-	 * @param phoneNumber - Phone number
-	 * @return {Promise<any>} - Returns manager and contact data by phone number
-	 */
-	async getManagerByPhoneNumber(phoneNumber: string): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.MANAGER.GET_BY_PHONE, {
-			params: {
-				phone_number: phoneNumber,
-			},
-		});
-		return response.data;
-	}
+  /**
+   * Alias for `client.utils.getPaymentMethods()`
+   * @returns {IPaymentMethodsResponse | IPaymentMethodsErrorResponse}
+   */
+  public async getPaymentMethods(): Promise<IPaymentMethodsResponse | IPaymentMethodsErrorResponse> {
+    return this.utils.getPaymentMethods();
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns payments list
-	 */
-	async getPaymentsList(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.PAYMENT.LIST);
-		return response.data;
-	}
+  /**
+   * Alias for `client.utils.getDeliveryMethods()`
+   * @returns {IDeliveryMethodsResponse | IDeliveryMethodsErrorResponse}
+   */
+  public async getDeliveryMethods(): Promise<IDeliveryMethodsResponse | IDeliveryMethodsErrorResponse> {
+    return this.utils.getDeliveryMethods();
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns invoices list
-	 */
-	async getInvoicesList(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.DOCUMENTS.INVOICE);
-		return response.data;
-	}
+  /**
+   * Alias for `client.utils.getStatuses()`
+   * @returns {IStatusesResponse | IStatusesErrorResponse}
+   */
+  public async getStatuses(): Promise<IStatusesResponse | IStatusesErrorResponse> {
+    return this.utils.getStatuses();
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns sales invoices list
-	 */
-	async getSalesInvoicesList(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.DOCUMENTS.SALES_INVOICE);
-		return response.data;
-	}
+  /**
+   * Alias for `client.managers.findByPhone()`
+   * @param {string}phoneNumber
+   * @returns {TGetManagerByPhoneResponse}
+   */
+  public async getManagerByPhoneNumber(phoneNumber: string): Promise<TGetManagerByPhoneResponse> {
+    return this.managers.findByPhone(phoneNumber);
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns cash orders list
-	 */
-	async getCashOrdersList(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.DOCUMENTS.CASH_ORDER);
-		return response.data;
-	}
+  /**
+   * Alias for `client.webhooks.create()`
+   * @param {IPaymentListParams}params
+   * @returns {IPaymentListResponse}
+   */
+  public async getPaymentsList(params?: IPaymentListParams): Promise<IPaymentListResponse> {
+    return this.payments.getPaymentsList(params);
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns arrival products list
-	 */
-	async getArrivalProductsList(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.DOCUMENTS.ARRIVAL_PRODUCT);
-		return response.data;
-	}
+  /**
+   * Alias for `client.payments.createPayment()`
+   * @param {ICreatePaymentParams}data
+   * @returns {TCreatePaymentResponse}
+   */
+  public async createPayment(data: ICreatePaymentParams): Promise<TCreatePaymentResponse> {
+    return this.payments.createPayment(data);
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns acts list
-	 */
-	async getActsList(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.DOCUMENTS.ACT);
-		return response.data;
-	}
+  /**
+   * Alias for `client.documents.getInvoicesList()`
+   * @param {IFilterableListParams}params
+   * @returns {DocumentQueryBuilder<IDocumentListResponse<IInvoice>>}
+   */
+  public getInvoicesList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IInvoice>> {
+    return this.documents.getInvoicesList(params);
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns contracts list
-	 */
-	async getContractsList(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.DOCUMENTS.CONTRACT);
-		return response.data;
-	}
+  /**
+   * Alias for `client.documents.getSalesInvoicesList
+   * @param {IFilterableListParams}params
+   * @returns {DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>>}
+   */
+  public getSalesInvoiceList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>> {
+    return this.documents.getSalesInvoicesList(params);
+  }
 
-	/**
-	 * @return {Promise<any>} - Returns checks list
-	 */
-	async getChecksList(): Promise<any> {
-		const response = await this.axiosInstance.get(ENDPOINTS.DOCUMENTS.CHECK);
-		return response.data;
-	}
+  /**
+   * Alias for `client.documents.getCashOrdersList()`
+   * @param {IFilterableListParams}params
+   * @returns {CashOrdersListBuilder}
+   */
+  public getCashOrderList(params?: IFilterableListParams): CashOrdersListBuilder {
+    return this.documents.getCashOrdersList(params);
+  }
 
-	/**
-	 * @param webhook - Webhook
-	 * @param data - Data for webhook
-	 * @return {Promise<any>} - Returns webhook
-	 */
-	async postWebhook(webhook: string, data: any): Promise<any> {
-		const response = await this.axiosInstance.post(`/${webhook}/`, data);
-		return response.data;
-	}
+  /**
+   * Alias for `client.documents.getArrivalProductsList()`
+   * @param {IFilterableListParams}params
+   * @returns {DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>>}
+   */
+  public getArrivalProductsList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>> {
+    return this.documents.getArrivalProductsList(params);
+  }
+
+  /**
+   * Alias for `client.documents.getActsList()`
+   * @param {IFilterableListParams}params
+   * @returns {DocumentQueryBuilder<IDocumentListResponse<IAct>>}
+   */
+  public getActsList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IAct>> {
+    return this.documents.getActsList(params);
+  }
+
+  /**
+   * Alias for `client.documents.getContractsList()`
+   * @param {IFilterableListParams}params
+   * @returns {DocumentQueryBuilder<IDocumentListResponse<IContract>>}
+   */
+  public getContractsList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IContract>> {
+    return this.documents.getContractsList(params);
+  }
+
+  /**
+   * Alias for `client.documents.getChecksList()`
+   * @param {IFilterableListParams}params
+   * @returns {DocumentQueryBuilder<IDocumentListResponse<ICheck>>}
+   */
+  public getChecksList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<ICheck>> {
+    return this.documents.getChecksList(params);
+  }
 }
