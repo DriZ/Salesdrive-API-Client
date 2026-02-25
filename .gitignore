@@ -6,7 +6,6 @@ docs/
 coverage/
 *.log
 .vscode/
-tests/
 index.js
 .husky/
 .eslintignore
