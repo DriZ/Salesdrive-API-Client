@@ -56,8 +56,8 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-      # - name: Publish to npm
-      #   run: npm publish --access public
-      #   env:
-      #     # Секрет для аутентификации в npm
-      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          # Секрет для аутентификации в npm
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

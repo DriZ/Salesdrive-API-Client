@@ -1,6 +1,6 @@
 import { type AxiosInstance } from "axios";
 import { ENDPOINTS } from "../constants";
-import { ICategory, IProductData, IProductOrCategoryResponse } from "../../types";
+import type { ICategory, IProductData, IProductOrCategoryResponse } from "../../types";
 
 export class ProductService {
   constructor(private readonly axiosInstance: AxiosInstance) { }

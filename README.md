@@ -7,13 +7,13 @@
 
 A modern, typed, and easy-to-use TypeScript client for the [SalesDrive API](https://api.salesdrive.me/api/docs/).
 
-This library simplifies interaction with the SalesDrive CRM by providing a fully-typed, Promise-based client with a fluent query builder for fetching data.
+This library simplifies interaction with the SalesDrive CRM by providing a fully-typed, Promise-based client with a fluent query builder for fetching data, and convenient services for managing orders, products, documents, and more.
 
 ## Features
 
 - **Fully Typed**: Written in TypeScript for a great developer experience with autocompletion and type safety.
 - **Modern API**: Uses `async/await` and a clean, service-oriented architecture.
-- **Fluent Query Builder**: Easily construct complex queries for fetching orders.
+- **Fluent Query Builder**: Easily construct complex queries for fetching orders, documents, and more.
 - **Robust Error Handling**: Throws custom `SalesDriveError` for easier debugging and handling of API errors.
 - **Automatic Retries**: Built-in support for retrying failed requests due to network issues or rate limiting (429).
 
@@ -35,10 +35,14 @@ const domain = "YOUR_DOMAIN"; // e.g., mycompany
 
 const client = new Client(apiKey, domain);
 
+// Optional: Register a global error handler
+client.catch((error) => {
+  console.error("Global API Error:", error.message);
+});
+
 async function getRecentOrders() {
   try {
-    const response = await client.orders
-      .getOrders()
+    const response = await client.findOrders()
       .status("__NOTDELETED__") // Get all non-deleted orders
       .updatedAtFrom("2026-02-01")
       .limit(25)

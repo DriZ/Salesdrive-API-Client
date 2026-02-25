@@ -1,20 +1,22 @@
 import { type AxiosInstance } from "axios";
 import { ENDPOINTS } from "../constants";
-import {
+import type {
   ICurrency,
-  IPaymentMethod,
-  IDeliveryMethod,
-  IStatus,
+  ICurrenciesResponse,
+  IGetCurrenciesResponse,
+  TPaymentMethodsResponse,
+  TDeliveryMethodsResponse,
+  TStatusesResponse,
 } from "../../types";
 
 export class UtilityService {
-  constructor(private readonly axiosInstance: AxiosInstance) {}
+  constructor(private readonly axiosInstance: AxiosInstance) { }
 
   /**
-   * @return {Promise<ICurrency[]>} - Returns currencies
+   * @return {Promise<IGetCurrenciesResponse | ICurrenciesResponse>} - Returns currencies
    */
-  async getCurrencies(): Promise<ICurrency[]> {
-    const response = await this.axiosInstance.get<ICurrency[]>(
+  async getCurrencies(): Promise<IGetCurrenciesResponse | ICurrenciesResponse> {
+    const response = await this.axiosInstance.get<IGetCurrenciesResponse | ICurrenciesResponse>(
       ENDPOINTS.CURRENCIES,
     );
     return response.data;
@@ -24,8 +26,8 @@ export class UtilityService {
    * @param data - Data for currencies
    * @return {Promise<ICurrency[]>} - Returns updated currencies
    */
-  async updateCurrencies(data: Partial<ICurrency>[]): Promise<ICurrency[]> {
-    const response = await this.axiosInstance.post<ICurrency[]>(
+  async updateCurrencies(data: Partial<ICurrency>[]): Promise<ICurrenciesResponse> {
+    const response = await this.axiosInstance.post<ICurrenciesResponse>(
       ENDPOINTS.CURRENCIES,
       data,
     );
@@ -33,30 +35,30 @@ export class UtilityService {
   }
 
   /**
-   * @return {Promise<IPaymentMethod[]>} - Returns payment methods
+   * @return {Promise<TPaymentMethodResponse>} - Returns payment methods or error message
    */
-  async getPaymentMethods(): Promise<IPaymentMethod[]> {
-    const response = await this.axiosInstance.get<IPaymentMethod[]>(
+  async getPaymentMethods(): Promise<TPaymentMethodsResponse> {
+    const response = await this.axiosInstance.get<TPaymentMethodsResponse>(
       ENDPOINTS.PAYMENT_METHODS,
     );
     return response.data;
   }
 
   /**
-   * @return {Promise<IDeliveryMethod[]>} - Returns delivery methods
+   * @return {Promise<TDeliveryMethodsResponse>} - Returns delivery methods or error message
    */
-  async getDeliveryMethods(): Promise<IDeliveryMethod[]> {
-    const response = await this.axiosInstance.get<IDeliveryMethod[]>(
+  async getDeliveryMethods(): Promise<TDeliveryMethodsResponse> {
+    const response = await this.axiosInstance.get<TDeliveryMethodsResponse>(
       ENDPOINTS.DELIVERY_METHODS,
     );
     return response.data;
   }
 
   /**
-   * @return {Promise<IStatus[]>} - Returns statuses
+   * @return {Promise<TStatusesResponse>} - Returns statuses
    */
-  async getStatuses(): Promise<IStatus[]> {
-    const response = await this.axiosInstance.get<IStatus[]>(
+  async getStatuses(): Promise<TStatusesResponse> {
+    const response = await this.axiosInstance.get<TStatusesResponse>(
       ENDPOINTS.STATUSES,
     );
     return response.data;

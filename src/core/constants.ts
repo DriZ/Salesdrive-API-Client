@@ -20,7 +20,7 @@ export const ENDPOINTS = {
     LIST: "/api/payment/list/",
   },
   MANAGER: {
-    GET_BY_PHONE: "/api/get_manager_by_phone_number/",
+    GET_BY_PHONE: "/api/get_manager_by_phone_number/?phone=",
   },
   DOCUMENTS: {
     INVOICE: "/api/invoice/list/",
@@ -33,4 +33,3 @@ export const ENDPOINTS = {
   },
 } as const;
 export type ENDPOINTS = typeof ENDPOINTS;
-export type ENDPOINT = ENDPOINTS[keyof ENDPOINTS];

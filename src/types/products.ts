@@ -15,6 +15,9 @@ export interface IProduct {
   documentName: string;
 }
 
+/**
+ * Поля продукта при создании заявки.
+ */
 export interface ICreateOrderProductFields {
   id: string,
   name: string,
@@ -42,27 +45,42 @@ export type IProductUpdateFields = Pick<
   | "stockId"
 >;
 
+/**
+ * Скидка на продукт.
+ */
 export interface IProductDiscount {
   value: string;
   date_start: string;
   date_end: string;
 }
 
+/**
+ * Элемент комплекта продукта.
+ */
 export interface IProductSetItem {
   id: string;
   quantity: number;
 }
 
+/**
+ * Изображение продукта.
+ */
 export interface IProductImage {
   fullsize: string;
 }
 
+/**
+ * Параметр продукта.
+ */
 export interface IProductParam {
   name: string;
   type: "select" | string;
   value: string;
 }
 
+/**
+ * Дополнительная цена продукта.
+ */
 export interface IProductAdditionalPrice {
   priceType: string;
   priceValue: number;
@@ -73,6 +91,7 @@ export interface IProductAdditionalPrice {
 /**
  * Represents the data for creating or updating a product.
  * The `id` field is used to identify the product for updates, or can be an external ID for creation.
+ * @see https://api.salesdrive.me/api/docs/#/product-category/product-update
  */
 export interface IProductData {
   id: string;
@@ -111,6 +130,10 @@ export interface IProductData {
   labelMode?: "replace" | "add";
 }
 
+/**
+ * Ответ API при операциях с продуктами или категориями.
+ * @see https://api.salesdrive.me/api/docs/#/product-category/product-update
+ */
 export interface IProductOrCategoryResponse {
   status: "success" | "error";
   message?: string;

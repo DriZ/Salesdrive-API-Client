@@ -143,6 +143,10 @@ export interface IOrder {
   [key: string]: any;
 }
 
+/**
+ * Поля для создания новой заявки.
+ * @see https://api.salesdrive.me/api/docs/#/order/order-create
+ */
 export type TOrderCreateFields = {
   getResultData: 0 | 1,
   lName: string,
@@ -209,7 +213,7 @@ export type TOrderCreateFields = {
   utmMedium: string,
   utmCampaign: string,
   utmContent: string,
-  utnTerm: string,
+  utmTerm: string,
   utmPage: string
   [key: string]: any;
 }
@@ -278,6 +282,7 @@ export type TUpdatePostTTN =
 
 /**
  * Представляет поля заявки, которые можно обновлять.
+ * @see https://api.salesdrive.me/api/docs/#/order/order-update
  */
 export type TOrderUpdateData = TOrderUpdateFields &
   TUpdatePostTTN & {
@@ -287,6 +292,7 @@ export type TOrderUpdateData = TOrderUpdateFields &
 
 /**
  * Представляет данные для обновления заявки.
+ * @see https://api.salesdrive.me/api/docs/#/order/order-update
  */
 export type TOrderUpdate = (
   | {
@@ -303,6 +309,7 @@ export type TOrderUpdate = (
 
 /**
  * Представляет ответ после обновления заявки.
+ * @see https://api.salesdrive.me/api/docs/#/order/order-update
  */
 export interface IUpdateOrderResponse {
   success?: boolean;
@@ -312,6 +319,7 @@ export interface IUpdateOrderResponse {
 
 /**
  * Представляет ответ после создания заявки.
+ * @see https://api.salesdrive.me/api/docs/#/order/order-create
  */
 export interface ICreateOrderResponse {
   error?: string;
@@ -324,6 +332,7 @@ export interface ICreateOrderResponse {
 
 /**
  * Представляет структуру ответа для списка заявок.
+ * @see https://api.salesdrive.me/api/docs/#/order/order-list
  */
 export interface IGetOrdersResponse {
   readonly status: string;
@@ -347,6 +356,7 @@ export interface IGetOrdersResponse {
 
 /**
  * Представляет структуру ответа для добавления заметки.
+ * @see https://api.salesdrive.me/api/docs/#/order/order-note
  */
 export interface IAddNoteResponse {
   success: boolean;
@@ -379,6 +389,9 @@ export type DateTimeYMDHMS =
  * Использование (string & {}) сохраняет автодополнение для литералов, но разрешает любые строки.
  */
 export type SalesDriveDate = Date | DateYMD | DateTimeYMDHMS | `${number}-${string}-${string} ${string}:${string}:${string}` | (string & object);
+/**
+ * Отформатированная дата SalesDrive.
+ */
 export type FormatedSalesDriveDate = DateYMD | DateTimeYMDHMS | `${number}-${string}-${string} ${string}:${string}:${string}`;
 
 /**
@@ -388,13 +401,6 @@ export interface IDateFilter {
   from?: SalesDriveDate;
   to?: SalesDriveDate;
 }
-
-/**
- * Utility-тип для получения ключей из T, значение которых соответствует типу V.
- */
-export type TKeysMatching<T, V> = {
-  [K in keyof T]-?: T[K] extends V ? K : never;
-}[keyof T];
 
 /**
  * Параметры для фильтрации и пагинации списка заявок.
@@ -408,6 +414,7 @@ export interface IGetOrdersParams {
 
 /**
  * Базовый тип для параметров фильтрации заявок.
+ * @see https://api.salesdrive.me/api/docs/#/order/order-list
  */
 export interface OrderParamsFilter {
   statusId?: TStatusIdFilter | TStatusIdFilter[];
