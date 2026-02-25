@@ -8,8 +8,3 @@ coverage/
 .vscode/
 index.js
 .husky/
-.eslintignore
-.eslintrc.js
-jest.config.js
-tsconfig.json
-typedoc.json
