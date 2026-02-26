@@ -1,3 +1,12 @@
+## [1.2.2](https://github.com/driz/salesdrive-api-client/compare/v1.2.1...v1.2.2) (2026-02-26)
+
+
+### Features
+
+* **core:** allow numeric timestamps for dates and add validation ([8b15bfa](https://github.com/driz/salesdrive-api-client/commit/8b15bfa2c414113ff7cf59bdd7a61d77f4a2f83a))
+
+
+
 ## [1.2.1](https://github.com/driz/salesdrive-api-client/compare/v1.2.0...v1.2.1) (2026-02-25)
 
 
