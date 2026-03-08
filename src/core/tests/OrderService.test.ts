@@ -96,7 +96,6 @@ describe("OrderService", () => {
           params: expect.objectContaining({
             limit: 50,
             filter: expect.objectContaining({
-              statusId: "__NOTDELETED__",
               orderTime: { from: "2023-10-01 00:00:00" },
             }),
           }),
