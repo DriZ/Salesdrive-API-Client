@@ -17,10 +17,8 @@ import type {
   ICheck,
   IContract,
   ICreatePaymentParams,
-  ICurrenciesResponse,
+  IUpdateCurrenciesResponse,
   ICurrency,
-  IDeliveryMethodsErrorResponse,
-  IDeliveryMethodsResponse,
   IDocumentListResponse,
   IFilterableListParams,
   IGetCurrenciesResponse,
@@ -29,17 +27,16 @@ import type {
   IOrder,
   IPaymentListParams,
   IPaymentListResponse,
-  IPaymentMethodsErrorResponse,
-  IPaymentMethodsResponse,
   IProductData,
   IProductOrCategoryResponse,
   ISalesInvoice,
-  IStatusesErrorResponse,
-  IStatusesResponse,
   TCreatePaymentResponse,
   TGetManagerByPhoneResponse,
   TOrderCreateFields,
   TOrderUpdateData,
+  IPaymentMethods,
+  IDeliveryMethod,
+  IStatus,
 } from "../types";
 import {
   CashOrdersListBuilder,
@@ -234,10 +231,10 @@ export class Client {
 
   /**
    * Alias for `client.utils.getCurrencies()`
-   * @returns {Promise<IGetCurrenciesResponse | ICurrenciesResponse>}
+   * @returns {Promise<IGetCurrenciesResponse | IUpdateCurrenciesResponse>}
    */
   public async getCurrencies(): Promise<
-    IGetCurrenciesResponse | ICurrenciesResponse
+    IGetCurrenciesResponse | IUpdateCurrenciesResponse
   > {
     return this.utils.getCurrencies();
   }
@@ -245,39 +242,38 @@ export class Client {
   /**
    * Alias for `client.utils.updateCurrencies()`
    * @param {Partial<ICurrency>[]}data массив объектов полей валют
-   * @returns {Promise<any>}
+   * @returns {Promise<IUpdateCurrenciesResponse>}
    */
-  public async updateCurrencies(data: Partial<ICurrency>[]): Promise<any> {
+  public async updateCurrencies(data: Partial<ICurrency>[]): Promise<IUpdateCurrenciesResponse> {
     return this.utils.updateCurrencies(data);
   }
 
   /**
    * Alias for `client.utils.getPaymentMethods()`
-   * @returns {IPaymentMethodsResponse | IPaymentMethodsErrorResponse}
+   * @returns {IPaymentMethods[]}
+   * @throws {IPaymentMethodsErrorResponse}
    */
   public async getPaymentMethods(): Promise<
-    IPaymentMethodsResponse | IPaymentMethodsErrorResponse
+    IPaymentMethods[]
   > {
     return this.utils.getPaymentMethods();
   }
 
   /**
    * Alias for `client.utils.getDeliveryMethods()`
-   * @returns {IDeliveryMethodsResponse | IDeliveryMethodsErrorResponse}
+   * @returns {IDeliveryMethod[]}
+   * @throws {IDeliveryMethodsErrorResponse}
    */
-  public async getDeliveryMethods(): Promise<
-    IDeliveryMethodsResponse | IDeliveryMethodsErrorResponse
-  > {
+  public async getDeliveryMethods(): Promise<IDeliveryMethod[]> {
     return this.utils.getDeliveryMethods();
   }
 
   /**
    * Alias for `client.utils.getStatuses()`
-   * @returns {IStatusesResponse | IStatusesErrorResponse}
+   * @returns {IStatusesResponse}
+   * @throws {IStatusesErrorResponse}
    */
-  public async getStatuses(): Promise<
-    IStatusesResponse | IStatusesErrorResponse
-  > {
+  public async getStatuses(): Promise<IStatus[]> {
     return this.utils.getStatuses();
   }
 

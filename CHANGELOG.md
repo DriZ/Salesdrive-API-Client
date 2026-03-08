@@ -1,3 +1,12 @@
+# [1.4.0](https://github.com/driz/salesdrive-api-client/compare/v1.3.0...v1.4.0) (2026-03-08)
+
+
+### Features
+
+* Optimize callbacks from UtilityService ([38a2f16](https://github.com/driz/salesdrive-api-client/commit/38a2f16d67b8551e3d4055a7802c8070dadaf3af))
+
+
+
 # [1.3.0](https://github.com/driz/salesdrive-api-client/compare/v1.2.2...v1.3.0) (2026-03-08)
 
 
