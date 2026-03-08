@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/driz/salesdrive-api-client/compare/v1.2.2...v1.3.0) (2026-03-08)
+
+
+### Features
+
+* Added organization, user, ordertype filters and equal methods into OrderQueryBuilder ([25e7104](https://github.com/driz/salesdrive-api-client/commit/25e71047503a14a55cd6e0af6965ddc267369e1b))
+
+
+
 ## [1.2.2](https://github.com/driz/salesdrive-api-client/compare/v1.2.1...v1.2.2) (2026-02-26)
 
 ### Features
