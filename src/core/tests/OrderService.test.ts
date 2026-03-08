@@ -56,7 +56,7 @@ describe("OrderService", () => {
         expect.objectContaining({
           params: expect.objectContaining({
             filter: expect.objectContaining({
-              statusId: 5,
+              statusId: [5],
             }),
           }),
         }),
