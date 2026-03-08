@@ -11,20 +11,33 @@ export interface ICurrency {
  * @see https://api.salesdrive.me/api/docs/#/currency/currency-list
  */
 export interface IGetCurrenciesResponse {
-  baseCurrency?: string;
-  currencies?: (ICurrency & {
+  baseCurrency: string;
+  currencies: (ICurrency & {
     abbreviation?: string;
   })[];
 }
+
+export interface IGetCurrenciesErrorResponse {
+  status: "error" | "success";
+  message: string;
+}
+
 
 /**
  * Ответ обновления валют
  * @see https://api.salesdrive.me/api/docs/#/currency/currency-update
  */
-export interface ICurrenciesResponse {
+export interface IUpdateCurrenciesResponse {
   status: "error" | "success";
-  message?: string;
+  message: string;
 }
+
+/**
+ * Тип ответа для получения валют (успех или ошибка).
+ */
+export type TGetCurrenciesResponse =
+  | IGetCurrenciesResponse
+  | IGetCurrenciesErrorResponse;
 
 /**
  * Представляет способ оплаты в SalesDrive.
@@ -41,7 +54,7 @@ export interface IPaymentMethods {
  */
 export interface IPaymentMethodsErrorResponse {
   status: string;
-  message?: string;
+  message: string;
 }
 
 /**
@@ -84,7 +97,7 @@ export interface IDeliveryMethodsResponse {
  */
 export interface IDeliveryMethodsErrorResponse {
   status: string;
-  message?: string;
+  message: string;
 }
 
 /**
@@ -118,7 +131,7 @@ export interface IStatusesResponse {
  */
 export interface IStatusesErrorResponse {
   status: string;
-  message?: string;
+  message: string;
 }
 
 /**
