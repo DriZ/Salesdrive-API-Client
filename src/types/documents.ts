@@ -1,6 +1,5 @@
 import { IProduct, IUnit } from "./products";
 
-
 /**
  * Базовый интерфейс документа.
  */

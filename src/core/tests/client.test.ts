@@ -28,7 +28,6 @@ jest.mock("axios-retry", () => {
 });
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-
 describe("Client", () => {
   const apiKey = "test-api-key";
   const domain = "test-domain";
@@ -77,7 +76,9 @@ describe("Client", () => {
       const retryCondition = config.retryCondition;
 
       // Mock isNetworkOrIdempotentRequestError to return false
-      (axiosRetry.isNetworkOrIdempotentRequestError as jest.Mock).mockReturnValue(false);
+      (
+        axiosRetry.isNetworkOrIdempotentRequestError as jest.Mock
+      ).mockReturnValue(false);
 
       const error429 = { response: { status: 429 } };
       expect(retryCondition(error429)).toBe(true);
@@ -88,7 +89,9 @@ describe("Client", () => {
       const config = (axiosRetry as unknown as jest.Mock).mock.calls[0][1];
       const retryCondition = config.retryCondition;
 
-      (axiosRetry.isNetworkOrIdempotentRequestError as jest.Mock).mockReturnValue(true);
+      (
+        axiosRetry.isNetworkOrIdempotentRequestError as jest.Mock
+      ).mockReturnValue(true);
 
       // Status doesn't matter if isNetwork... returns true
       const errorOther = { response: { status: 500 } };
@@ -104,9 +107,7 @@ describe("Client", () => {
         data: { data: [], totals: { count: 0 } },
       });
 
-      await client
-        .findOrders()
-        .updatedAtFrom("2023-01-01");
+      await client.findOrders().updatedAtFrom("2023-01-01");
 
       expect(mockAxiosInstance.get).toHaveBeenCalledWith(
         "/api/order/list/",
@@ -146,14 +147,11 @@ describe("Client", () => {
 
       const result = await client.findOrderById(123);
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith(
-        "/api/order/list/",
-        {
-          params: {
-            "filter[id]": mockOrder.id,
-          }
-        }
-      );
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith("/api/order/list/", {
+        params: {
+          "filter[id]": mockOrder.id,
+        },
+      });
       expect(result).toEqual(mockOrder);
     });
   });

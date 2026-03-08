@@ -13,15 +13,20 @@ import type {
 import { formatSalesDriveDate } from "../utils";
 import { CashOrdersListBuilder, DocumentQueryBuilder } from "./QueryBuilders";
 
-
 export class DocumentService {
-  constructor(private readonly axiosInstance: AxiosInstance) { }
+  constructor(private readonly axiosInstance: AxiosInstance) {}
 
   /**
    * @return {DocumentQueryBuilder} - Returns query builder for invoices list
    */
-  public getInvoicesList(params?: IDocumentListParams): DocumentQueryBuilder<IDocumentListResponse<IInvoice>> {
-    return new DocumentQueryBuilder<IDocumentListResponse<IInvoice>>(this, ENDPOINTS.DOCUMENTS.INVOICE, params);
+  public getInvoicesList(
+    params?: IDocumentListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<IInvoice>> {
+    return new DocumentQueryBuilder<IDocumentListResponse<IInvoice>>(
+      this,
+      ENDPOINTS.DOCUMENTS.INVOICE,
+      params,
+    );
   }
 
   /**
@@ -72,42 +77,78 @@ export class DocumentService {
   /**
    * @return {DocumentQueryBuilder} - Returns query builder for sales invoices list
    */
-  public getSalesInvoicesList(params?: IDocumentListParams): DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>> {
-    return new DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>>(this, ENDPOINTS.DOCUMENTS.SALES_INVOICE, params);
+  public getSalesInvoicesList(
+    params?: IDocumentListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>> {
+    return new DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>>(
+      this,
+      ENDPOINTS.DOCUMENTS.SALES_INVOICE,
+      params,
+    );
   }
 
   /**
    * @return {CashOrdersListBuilder} - Returns query builder for cash orders list
    */
-  public getCashOrdersList(params?: IDocumentListParams): CashOrdersListBuilder {
-    return new CashOrdersListBuilder(this, ENDPOINTS.DOCUMENTS.CASH_ORDER, params);
+  public getCashOrdersList(
+    params?: IDocumentListParams,
+  ): CashOrdersListBuilder {
+    return new CashOrdersListBuilder(
+      this,
+      ENDPOINTS.DOCUMENTS.CASH_ORDER,
+      params,
+    );
   }
 
   /**
    * @return {DocumentQueryBuilder} - Returns query builder for arrival products list
    */
-  public getArrivalProductsList(params?: IDocumentListParams): DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>> {
-    return new DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>>(this, ENDPOINTS.DOCUMENTS.ARRIVAL_PRODUCT, params);
+  public getArrivalProductsList(
+    params?: IDocumentListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>> {
+    return new DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>>(
+      this,
+      ENDPOINTS.DOCUMENTS.ARRIVAL_PRODUCT,
+      params,
+    );
   }
 
   /**
    * @return {DocumentQueryBuilder} - Returns query builder for acts list
    */
-  public getActsList(params?: IDocumentListParams): DocumentQueryBuilder<IDocumentListResponse<IAct>> {
-    return new DocumentQueryBuilder<IDocumentListResponse<IAct>>(this, ENDPOINTS.DOCUMENTS.ACT, params);
+  public getActsList(
+    params?: IDocumentListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<IAct>> {
+    return new DocumentQueryBuilder<IDocumentListResponse<IAct>>(
+      this,
+      ENDPOINTS.DOCUMENTS.ACT,
+      params,
+    );
   }
 
   /**
    * @return {DocumentQueryBuilder} - Returns query builder for contracts list
    */
-  public getContractsList(params?: IDocumentListParams): DocumentQueryBuilder<IDocumentListResponse<IContract>> {
-    return new DocumentQueryBuilder<IDocumentListResponse<IContract>>(this, ENDPOINTS.DOCUMENTS.CONTRACT, params);
+  public getContractsList(
+    params?: IDocumentListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<IContract>> {
+    return new DocumentQueryBuilder<IDocumentListResponse<IContract>>(
+      this,
+      ENDPOINTS.DOCUMENTS.CONTRACT,
+      params,
+    );
   }
 
   /**
    * @return {DocumentQueryBuilder} - Returns query builder for checks list
    */
-  public getChecksList(params?: IDocumentListParams): DocumentQueryBuilder<IDocumentListResponse<ICheck>> {
-    return new DocumentQueryBuilder<IDocumentListResponse<ICheck>>(this, ENDPOINTS.DOCUMENTS.CHECK, params);
+  public getChecksList(
+    params?: IDocumentListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<ICheck>> {
+    return new DocumentQueryBuilder<IDocumentListResponse<ICheck>>(
+      this,
+      ENDPOINTS.DOCUMENTS.CHECK,
+      params,
+    );
   }
 }

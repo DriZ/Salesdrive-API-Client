@@ -10,15 +10,15 @@ import type {
 } from "../../types";
 
 export class UtilityService {
-  constructor(private readonly axiosInstance: AxiosInstance) { }
+  constructor(private readonly axiosInstance: AxiosInstance) {}
 
   /**
    * @return {Promise<IGetCurrenciesResponse | ICurrenciesResponse>} - Returns currencies
    */
   async getCurrencies(): Promise<IGetCurrenciesResponse | ICurrenciesResponse> {
-    const response = await this.axiosInstance.get<IGetCurrenciesResponse | ICurrenciesResponse>(
-      ENDPOINTS.CURRENCIES,
-    );
+    const response = await this.axiosInstance.get<
+      IGetCurrenciesResponse | ICurrenciesResponse
+    >(ENDPOINTS.CURRENCIES);
     return response.data;
   }
 
@@ -26,7 +26,9 @@ export class UtilityService {
    * @param data - Data for currencies
    * @return {Promise<ICurrency[]>} - Returns updated currencies
    */
-  async updateCurrencies(data: Partial<ICurrency>[]): Promise<ICurrenciesResponse> {
+  async updateCurrencies(
+    data: Partial<ICurrency>[],
+  ): Promise<ICurrenciesResponse> {
     const response = await this.axiosInstance.post<ICurrenciesResponse>(
       ENDPOINTS.CURRENCIES,
       data,

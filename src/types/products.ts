@@ -19,14 +19,14 @@ export interface IProduct {
  * Поля продукта при создании заявки.
  */
 export interface ICreateOrderProductFields {
-  id: string,
-  name: string,
-  costPerItem: number,
-  amount: number,
-  description: string,
-  discount: string,
-  sku: string,
-  commission: string
+  id: string;
+  name: string;
+  costPerItem: number;
+  amount: number;
+  description: string;
+  discount: string;
+  sku: string;
+  commission: string;
 }
 
 /**

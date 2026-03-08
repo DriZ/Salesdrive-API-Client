@@ -1,17 +1,24 @@
 import { type AxiosInstance } from "axios";
 import { ENDPOINTS } from "../constants";
-import { ICreatePaymentParams, IPaymentListParams, IPaymentListResponse, TCreatePaymentResponse } from "../../types";
+import {
+  ICreatePaymentParams,
+  IPaymentListParams,
+  IPaymentListResponse,
+  TCreatePaymentResponse,
+} from "../../types";
 import { PaymentQueryBuilder } from "./QueryBuilders";
 import { formatSalesDriveDate } from "../utils";
 
 export class PaymentService {
-  constructor(private readonly axiosInstance: AxiosInstance) { }
+  constructor(private readonly axiosInstance: AxiosInstance) {}
 
   /**
    * @param data - Data for payment
    * @return {Promise<any>} - Returns created payment
    */
-  async createPayment(data: ICreatePaymentParams): Promise<TCreatePaymentResponse> {
+  async createPayment(
+    data: ICreatePaymentParams,
+  ): Promise<TCreatePaymentResponse> {
     const response = await this.axiosInstance.post<TCreatePaymentResponse>(
       ENDPOINTS.PAYMENT.CREATE,
       data,
@@ -47,16 +54,25 @@ export class PaymentService {
         if (filterItem) {
           const newFilterItem = { ...filterItem };
           if (newFilterItem.from) {
-            newFilterItem.from = formatSalesDriveDate(newFilterItem.from, "00:00:00");
+            newFilterItem.from = formatSalesDriveDate(
+              newFilterItem.from,
+              "00:00:00",
+            );
           }
           if (newFilterItem.to) {
-            newFilterItem.to = formatSalesDriveDate(newFilterItem.to, "23:59:59");
+            newFilterItem.to = formatSalesDriveDate(
+              newFilterItem.to,
+              "23:59:59",
+            );
           }
           requestParams.filter[field] = newFilterItem;
         }
       }
     }
-    const response = await this.axiosInstance.get<IPaymentListResponse>(ENDPOINTS.PAYMENT.LIST, { params: requestParams });
+    const response = await this.axiosInstance.get<IPaymentListResponse>(
+      ENDPOINTS.PAYMENT.LIST,
+      { params: requestParams },
+    );
     return response.data;
   }
 }

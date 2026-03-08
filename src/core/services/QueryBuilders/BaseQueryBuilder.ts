@@ -7,8 +7,7 @@ export interface IBaseParams {
 export abstract class BaseQueryBuilder<
   TParams extends IBaseParams,
   TResponse,
-> implements PromiseLike<TResponse>
-{
+> implements PromiseLike<TResponse> {
   protected params: TParams;
 
   constructor(initialParams?: TParams) {

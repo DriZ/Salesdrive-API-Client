@@ -86,7 +86,9 @@ export interface ICreatePaymentErrorResponse {
 /**
  * Тип ответа создания платежа (успех или ошибка).
  */
-export type TCreatePaymentResponse = ICreatePaymentResponse | ICreatePaymentErrorResponse;
+export type TCreatePaymentResponse =
+  | ICreatePaymentResponse
+  | ICreatePaymentErrorResponse;
 
 /**
  * Параметры для создания нового платежа.
