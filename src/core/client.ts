@@ -41,7 +41,10 @@ import type {
   TOrderCreateFields,
   TOrderUpdateData,
 } from "../types";
-import { CashOrdersListBuilder, DocumentQueryBuilder } from "./services/QueryBuilders";
+import {
+  CashOrdersListBuilder,
+  DocumentQueryBuilder,
+} from "./services/QueryBuilders";
 
 export class Client {
   private readonly axiosInstance: AxiosInstance;
@@ -119,7 +122,9 @@ export class Client {
    * @param {Partial<TOrderCreateFields>}data Объект полей заявки
    * @returns {Promise<number | null>} Вовзращает ID созданной заявки или null в случае неудачи
    */
-  public async createOrder(data: Partial<TOrderCreateFields>): Promise<number | null> {
+  public async createOrder(
+    data: Partial<TOrderCreateFields>,
+  ): Promise<number | null> {
     return this.orders.create(data);
   }
 
@@ -139,7 +144,10 @@ export class Client {
    * @param {TOrderUpdateData}fields объект полей, которые нужно обновить в заявке
    * @returns {Promise<boolean>} Результат обновления, true если заявка найдена и обновлена
    */
-  public async updateOrder(id: number | string, fields: TOrderUpdateData): Promise<boolean> {
+  public async updateOrder(
+    id: number | string,
+    fields: TOrderUpdateData,
+  ): Promise<boolean> {
     return this.orders.update(id, fields);
   }
 
@@ -149,7 +157,10 @@ export class Client {
    * @param {string}note
    * @returns {IAddNoteResponse}
    */
-  public async addNoteToOrder(orderId: number, note: string): Promise<IAddNoteResponse> {
+  public async addNoteToOrder(
+    orderId: number,
+    note: string,
+  ): Promise<IAddNoteResponse> {
     return this.orders.addNote(orderId, note);
   }
 
@@ -158,7 +169,9 @@ export class Client {
    * @param {IProductData[]}products
    * @returns {IProductOrCategoryResponse}
    */
-  public async createProducts(products: IProductData[]): Promise<IProductOrCategoryResponse> {
+  public async createProducts(
+    products: IProductData[],
+  ): Promise<IProductOrCategoryResponse> {
     return this.products.createProducts(products);
   }
 
@@ -180,7 +193,9 @@ export class Client {
    * @param {string[]}productIds массив из ID товаров
    * @returns {IProductOrCategoryResponse}
    */
-  public async deleteProducts(productIds: string[]): Promise<IProductOrCategoryResponse> {
+  public async deleteProducts(
+    productIds: string[],
+  ): Promise<IProductOrCategoryResponse> {
     return this.products.deleteProducts(productIds);
   }
 
@@ -190,7 +205,7 @@ export class Client {
    * @returns {IProductOrCategoryResponse}
    */
   public async createCategories(
-    data: Omit<ICategory, "id">[]
+    data: Omit<ICategory, "id">[],
   ): Promise<IProductOrCategoryResponse> {
     return this.products.createCategories(data);
   }
@@ -201,7 +216,7 @@ export class Client {
    * @returns {IProductOrCategoryResponse}
    */
   public async updateCategories(
-    data: (Pick<ICategory, "id"> & Partial<Omit<ICategory, "id">>)[]
+    data: (Pick<ICategory, "id"> & Partial<Omit<ICategory, "id">>)[],
   ): Promise<IProductOrCategoryResponse> {
     return this.products.updateCategories(data);
   }
@@ -212,7 +227,7 @@ export class Client {
    * @returns {IProductOrCategoryResponse}
    */
   public async deleteCategories(
-    categoryIds: number[]
+    categoryIds: number[],
   ): Promise<IProductOrCategoryResponse> {
     return this.products.deleteCategories(categoryIds);
   }
@@ -221,7 +236,9 @@ export class Client {
    * Alias for `client.utils.getCurrencies()`
    * @returns {Promise<IGetCurrenciesResponse | ICurrenciesResponse>}
    */
-  public async getCurrencies(): Promise<IGetCurrenciesResponse | ICurrenciesResponse> {
+  public async getCurrencies(): Promise<
+    IGetCurrenciesResponse | ICurrenciesResponse
+  > {
     return this.utils.getCurrencies();
   }
 
@@ -238,7 +255,9 @@ export class Client {
    * Alias for `client.utils.getPaymentMethods()`
    * @returns {IPaymentMethodsResponse | IPaymentMethodsErrorResponse}
    */
-  public async getPaymentMethods(): Promise<IPaymentMethodsResponse | IPaymentMethodsErrorResponse> {
+  public async getPaymentMethods(): Promise<
+    IPaymentMethodsResponse | IPaymentMethodsErrorResponse
+  > {
     return this.utils.getPaymentMethods();
   }
 
@@ -246,7 +265,9 @@ export class Client {
    * Alias for `client.utils.getDeliveryMethods()`
    * @returns {IDeliveryMethodsResponse | IDeliveryMethodsErrorResponse}
    */
-  public async getDeliveryMethods(): Promise<IDeliveryMethodsResponse | IDeliveryMethodsErrorResponse> {
+  public async getDeliveryMethods(): Promise<
+    IDeliveryMethodsResponse | IDeliveryMethodsErrorResponse
+  > {
     return this.utils.getDeliveryMethods();
   }
 
@@ -254,7 +275,9 @@ export class Client {
    * Alias for `client.utils.getStatuses()`
    * @returns {IStatusesResponse | IStatusesErrorResponse}
    */
-  public async getStatuses(): Promise<IStatusesResponse | IStatusesErrorResponse> {
+  public async getStatuses(): Promise<
+    IStatusesResponse | IStatusesErrorResponse
+  > {
     return this.utils.getStatuses();
   }
 
@@ -263,7 +286,9 @@ export class Client {
    * @param {string}phoneNumber
    * @returns {TGetManagerByPhoneResponse}
    */
-  public async getManagerByPhoneNumber(phoneNumber: string): Promise<TGetManagerByPhoneResponse> {
+  public async getManagerByPhoneNumber(
+    phoneNumber: string,
+  ): Promise<TGetManagerByPhoneResponse> {
     return this.managers.findByPhone(phoneNumber);
   }
 
@@ -272,7 +297,9 @@ export class Client {
    * @param {IPaymentListParams}params
    * @returns {IPaymentListResponse}
    */
-  public async getPaymentsList(params?: IPaymentListParams): Promise<IPaymentListResponse> {
+  public async getPaymentsList(
+    params?: IPaymentListParams,
+  ): Promise<IPaymentListResponse> {
     return this.payments.getPaymentsList(params);
   }
 
@@ -281,7 +308,9 @@ export class Client {
    * @param {ICreatePaymentParams}data
    * @returns {TCreatePaymentResponse}
    */
-  public async createPayment(data: ICreatePaymentParams): Promise<TCreatePaymentResponse> {
+  public async createPayment(
+    data: ICreatePaymentParams,
+  ): Promise<TCreatePaymentResponse> {
     return this.payments.createPayment(data);
   }
 
@@ -290,7 +319,9 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<IInvoice>>}
    */
-  public getInvoicesList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IInvoice>> {
+  public getInvoicesList(
+    params?: IFilterableListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<IInvoice>> {
     return this.documents.getInvoicesList(params);
   }
 
@@ -299,7 +330,9 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>>}
    */
-  public getSalesInvoiceList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>> {
+  public getSalesInvoiceList(
+    params?: IFilterableListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<ISalesInvoice>> {
     return this.documents.getSalesInvoicesList(params);
   }
 
@@ -308,7 +341,9 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {CashOrdersListBuilder}
    */
-  public getCashOrderList(params?: IFilterableListParams): CashOrdersListBuilder {
+  public getCashOrderList(
+    params?: IFilterableListParams,
+  ): CashOrdersListBuilder {
     return this.documents.getCashOrdersList(params);
   }
 
@@ -317,7 +352,9 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>>}
    */
-  public getArrivalProductsList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>> {
+  public getArrivalProductsList(
+    params?: IFilterableListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<IArrivalProduct>> {
     return this.documents.getArrivalProductsList(params);
   }
 
@@ -326,7 +363,9 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<IAct>>}
    */
-  public getActsList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IAct>> {
+  public getActsList(
+    params?: IFilterableListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<IAct>> {
     return this.documents.getActsList(params);
   }
 
@@ -335,7 +374,9 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<IContract>>}
    */
-  public getContractsList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<IContract>> {
+  public getContractsList(
+    params?: IFilterableListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<IContract>> {
     return this.documents.getContractsList(params);
   }
 
@@ -344,7 +385,9 @@ export class Client {
    * @param {IFilterableListParams}params
    * @returns {DocumentQueryBuilder<IDocumentListResponse<ICheck>>}
    */
-  public getChecksList(params?: IFilterableListParams): DocumentQueryBuilder<IDocumentListResponse<ICheck>> {
+  public getChecksList(
+    params?: IFilterableListParams,
+  ): DocumentQueryBuilder<IDocumentListResponse<ICheck>> {
     return this.documents.getChecksList(params);
   }
 }

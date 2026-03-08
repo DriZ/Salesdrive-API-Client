@@ -1,4 +1,10 @@
-import { IGetOrdersParams, IGetOrdersResponse, SalesDriveDate, TStatusIdFilter } from "../../../types";
+import {
+  IGetOrdersParams,
+  IGetOrdersResponse,
+  SalesDriveDate,
+  TStatusIdFilter,
+  TTypeIdFilter,
+} from "../../../types";
 import { OrderService } from "../OrderService";
 import { BaseQueryBuilder } from "./BaseQueryBuilder";
 
@@ -18,9 +24,9 @@ export class OrderQueryBuilder extends BaseQueryBuilder<
   }
 
   /**
-   * Фильтр устанавливает начальную дату изменения заявки
-   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
-   * @returns {OrderQueryBuilder}
+   * Sets the start date for order update time filter.
+   * @param date A date (YYYY-MM-DD), a date with time (YYYY-MM-DD HH:mm:ss), or a `Date` object.
+   * @returns {this}
    */
   public updatedAtFrom(date: SalesDriveDate): this {
     this.ensureFilterObject();
@@ -30,9 +36,9 @@ export class OrderQueryBuilder extends BaseQueryBuilder<
   }
 
   /**
-   * Фильтр устанавливает конечную дату изменения заявки
-   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
-   * @returns {OrderQueryBuilder}
+   * Sets the end date for order update time filter.
+   * @param date A date (YYYY-MM-DD), a date with time (YYYY-MM-DD HH:mm:ss), or a `Date` object.
+   * @returns {this}
    */
   public updatedAtTo(date: SalesDriveDate): this {
     this.ensureFilterObject();
@@ -42,9 +48,9 @@ export class OrderQueryBuilder extends BaseQueryBuilder<
   }
 
   /**
-   * Фильтр устанавливает начальную дату создания заявки
-   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
-   * @returns {OrderQueryBuilder}
+   * Sets the start date for order creation time filter.
+   * @param date A date (YYYY-MM-DD), a date with time (YYYY-MM-DD HH:mm:ss), or a `Date` object.
+   * @returns {this}
    */
   public orderTimeFrom(date: SalesDriveDate): this {
     this.ensureFilterObject();
@@ -54,9 +60,9 @@ export class OrderQueryBuilder extends BaseQueryBuilder<
   }
 
   /**
-   * Фильтр устанавливает конечную дату создания заявки
-   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
-   * @returns {OrderQueryBuilder}
+   * Sets the end date for order creation time filter.
+   * @param date A date (YYYY-MM-DD), a date with time (YYYY-MM-DD HH:mm:ss), or a `Date` object.
+   * @returns {this}
    */
   public orderTimeTo(date: SalesDriveDate): this {
     this.ensureFilterObject();
@@ -66,20 +72,55 @@ export class OrderQueryBuilder extends BaseQueryBuilder<
   }
 
   /**
-   * ID статуса в SalesDrive или __NOTELETED__ - все заявки, кроме удалённых или __ALL__ - все заявки
+   * Status ID in SalesDrive, `__NOTDELETED__` for all non-deleted orders, or `__ALL__` for all orders.
    * @param {TStatusIdFilter | TStatusIdFilter[]} statusId
-   * @returns {OrderQueryBuilder}
+   * @returns {this}
    */
   public statusId(statusId: TStatusIdFilter | TStatusIdFilter[]): this {
     this.ensureFilterObject();
-    this.params.filter!.statusId = statusId;
+    this.params.filter!.statusId = Array.isArray(statusId)
+      ? statusId
+      : [statusId];
     return this;
   }
 
   /**
-   * Фильтр устанавливает начальный номер заявки
+   * Order type in SalesDrive.
+   * @param {TTypeIdFilter | TTypeIdFilter[]} typeId
+   * @returns {this}
+   */
+  public typeId(typeId: TTypeIdFilter | TTypeIdFilter[]): this {
+    this.ensureFilterObject();
+    this.params.filter!.typeId = Array.isArray(typeId) ? typeId : [typeId];
+    return this;
+  }
+
+  /**
+   * Sets the order's manager ID for filtering.
+   * @param {number | number[]} userId
+   * @returns {this}
+   */
+  public userId(userId: number | number[]): this {
+    this.ensureFilterObject();
+    this.params.filter!.userId = Array.isArray(userId) ? userId : [userId];
+    return this;
+  }
+
+  /**
+   * Filters by organization ID(s).
+   * @param {number | number[]} ids
+   * @returns {this}
+   */
+  public organizationId(ids: number | number[]): this {
+    this.ensureFilterObject();
+    this.params.filter!.organizationId = Array.isArray(ids) ? ids : [ids];
+    return this;
+  }
+
+  /**
+   * Sets the starting order ID for filtering.
    * @param {number} id
-   * @returns {OrderQueryBuilder}
+   * @returns {this}
    */
   public idFrom(id: number): this {
     this.ensureFilterObject();
@@ -89,9 +130,9 @@ export class OrderQueryBuilder extends BaseQueryBuilder<
   }
 
   /**
-   * Фильтр устанавливает конечный номер заявки
+   * Sets the ending order ID for filtering.
    * @param {number} id
-   * @returns {OrderQueryBuilder}
+   * @returns {this}
    */
   public idTo(id: number): this {
     this.ensureFilterObject();
@@ -101,9 +142,9 @@ export class OrderQueryBuilder extends BaseQueryBuilder<
   }
 
   /**
-   * Фильтр устанавливает ID статуса в SalesDrive или массив из ID статусов
-   * @param statusIds
-   * @returns {OrderQueryBuilder}
+   * Sets the status ID in SalesDrive or an array of status IDs for filtering.
+   * @param {number | number[]} statusIds
+   * @returns {this}
    */
   public setStatusId(statusIds: number | number[]): this {
     this.ensureFilterObject();
@@ -114,10 +155,10 @@ export class OrderQueryBuilder extends BaseQueryBuilder<
   }
 
   /**
-   * Фильтр устанавливает начальную дату изменения статуса заявки
-   * @param date дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
+   * Sets the start date for order status change time filter.
+   * @param date A date (YYYY-MM-DD), a date with time (YYYY-MM-DD HH:mm:ss), or a `Date` object.
    * @example setStatusTimeFrom("2025-01-01 10:15:00")
-   * @returns {OrderQueryBuilder}
+   * @returns {this}
    */
   public setStatusTimeFrom(date: SalesDriveDate): this {
     this.ensureFilterObject();
@@ -127,11 +168,11 @@ export class OrderQueryBuilder extends BaseQueryBuilder<
   }
 
   /**
-   * Фильтр устанавливает конечную дату изменения статуса заявки
-   * @param date Date() дата (YYYY-MM-DD), дата со временем (YYYY-MM-DD HH:mm:ss) или объект `Date`
+   * Sets the end date for order status change time filter.
+   * @param date A date (YYYY-MM-DD), a date with time (YYYY-MM-DD HH:mm:ss), or a `Date` object.
    * @example setStatusTimeTo("2025-01-01 10:15:00")
    * @example setStatusTimeTo(new Date().setMonth(2))
-   * @returns {OrderQueryBuilder}
+   * @returns {this}
    */
   public setStatusTimeTo(date: SalesDriveDate): this {
     this.ensureFilterObject();

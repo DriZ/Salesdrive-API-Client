@@ -56,8 +56,9 @@ export interface IPaymentMethodsResponse {
 /**
  * Тип ответа для методов оплаты (успех или ошибка).
  */
-export type TPaymentMethodsResponse = IPaymentMethodsResponse | IPaymentMethodsErrorResponse;
-
+export type TPaymentMethodsResponse =
+  | IPaymentMethodsResponse
+  | IPaymentMethodsErrorResponse;
 
 /**
  * Представляет способ доставки в SalesDrive.
@@ -89,8 +90,9 @@ export interface IDeliveryMethodsErrorResponse {
 /**
  * Тип ответа для методов доставки (успех или ошибка).
  */
-export type TDeliveryMethodsResponse = IDeliveryMethodsResponse | IDeliveryMethodsErrorResponse;
-
+export type TDeliveryMethodsResponse =
+  | IDeliveryMethodsResponse
+  | IDeliveryMethodsErrorResponse;
 
 /**
  * Представляет статус заявки в SalesDrive.

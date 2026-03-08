@@ -7,7 +7,7 @@ export { SalesDriveError } from "./core/errors";
 export * from "./types";
 export * from "./core/constants";
 export * from "./core/services/QueryBuilders";
-export { DocumentService } from "./core/services/DocumentService"
+export { DocumentService } from "./core/services/DocumentService";
 export { OrderService } from "./core/services/OrderService";
 export { ProductService } from "./core/services/ProductService";
 export { PaymentService } from "./core/services/PaymentService";

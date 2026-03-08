@@ -1,16 +1,22 @@
 import { type AxiosInstance } from "axios";
 import { ENDPOINTS } from "../constants";
-import type { ICategory, IProductData, IProductOrCategoryResponse } from "../../types";
+import type {
+  ICategory,
+  IProductData,
+  IProductOrCategoryResponse,
+} from "../../types";
 
 export class ProductService {
-  constructor(private readonly axiosInstance: AxiosInstance) { }
+  constructor(private readonly axiosInstance: AxiosInstance) {}
 
   /**
    * Creates one or more products.
    * @param products An array of product data objects to create.
    * @returns A promise that resolves with the API response.
    */
-  async createProducts(products: IProductData[]): Promise<IProductOrCategoryResponse> {
+  async createProducts(
+    products: IProductData[],
+  ): Promise<IProductOrCategoryResponse> {
     const payload = {
       action: "add",
       product: products,
@@ -49,7 +55,9 @@ export class ProductService {
    * @param productIds An array of product IDs to delete.
    * @returns A promise that resolves with the API response.
    */
-  async deleteProducts(productIds: string[]): Promise<IProductOrCategoryResponse> {
+  async deleteProducts(
+    productIds: string[],
+  ): Promise<IProductOrCategoryResponse> {
     const payload = {
       action: "delete",
       product: productIds.map((id) => ({ id })),
@@ -66,7 +74,9 @@ export class ProductService {
    * @param data Data for the categories. `name` is required.
    * @returns A promise that resolves with the API response.
    */
-  async createCategories(data: Omit<ICategory, "id">[]): Promise<IProductOrCategoryResponse> {
+  async createCategories(
+    data: Omit<ICategory, "id">[],
+  ): Promise<IProductOrCategoryResponse> {
     const payload = {
       action: "add",
       category: data,
@@ -102,7 +112,9 @@ export class ProductService {
    * @param categoryIds An array of category IDs to delete.
    * @returns A promise that resolves with the API response.
    */
-  async deleteCategories(categoryIds: number[]): Promise<IProductOrCategoryResponse> {
+  async deleteCategories(
+    categoryIds: number[],
+  ): Promise<IProductOrCategoryResponse> {
     const payload = {
       action: "delete",
       category: categoryIds.map((id) => ({ id })),

@@ -12,7 +12,7 @@ const dateToYMDHMS = (date: Date): FormatedSalesDriveDate => {
 
 export const formatSalesDriveDate = (
   date: SalesDriveDate,
-  defaultTime: "00:00:00" | "23:59:59"
+  defaultTime: "00:00:00" | "23:59:59",
 ): FormatedSalesDriveDate => {
   if (date instanceof Date) {
     return dateToYMDHMS(date);
@@ -24,7 +24,9 @@ export const formatSalesDriveDate = (
     const d = new Date(date);
     const year = d.getFullYear();
     if (year < 2000 || year > 2100) {
-      throw new Error(`The provided timestamp ${date} results in a date outside the reasonable range (year 2000-2100): ${d.toISOString()}. If this is intentional, please use a string or Date object format.`);
+      throw new Error(
+        `The provided timestamp ${date} results in a date outside the reasonable range (year 2000-2100): ${d.toISOString()}. If this is intentional, please use a string or Date object format.`,
+      );
     }
     return dateToYMDHMS(d);
   }

@@ -19,6 +19,12 @@
     "declaration": true,
     "declarationMap": true
   },
-  "include": ["src/**/*.ts", "LICENSE", "package.json", "README.md", "CHANGELOG.md"],
+  "include": [
+    "src/**/*.ts",
+    "LICENSE",
+    "package.json",
+    "README.md",
+    "CHANGELOG.md"
+  ],
   "exclude": ["node_modules", "dist"]
 }

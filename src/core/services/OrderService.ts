@@ -17,15 +17,16 @@ import { ENDPOINTS } from "../constants";
 import { formatSalesDriveDate } from "../utils";
 import { OrderQueryBuilder } from "./QueryBuilders";
 
-
 export class OrderService {
-  constructor(private readonly axiosInstance: AxiosInstance) { }
+  constructor(private readonly axiosInstance: AxiosInstance) {}
 
   public find(params?: IGetOrdersParams): OrderQueryBuilder {
     return new OrderQueryBuilder(this, params);
   }
 
-  public async fetchOrders(params?: IGetOrdersParams): Promise<IGetOrdersResponse> {
+  public async fetchOrders(
+    params?: IGetOrdersParams,
+  ): Promise<IGetOrdersResponse> {
     const requestParams = params ? { ...params } : {};
 
     if (requestParams.filter) {
@@ -72,7 +73,9 @@ export class OrderService {
    * @param {Partial<TOrderCreateFields>}data Объект полей заявки
    * @returns {Promise<number | null>} Вовзращает ID созданной заявки или null в случае неудачи
    */
-  public async create(data: Partial<TOrderCreateFields>): Promise<number | null> {
+  public async create(
+    data: Partial<TOrderCreateFields>,
+  ): Promise<number | null> {
     const response = await this.axiosInstance.post<ICreateOrderResponse>(
       ENDPOINTS.ORDER.CREATE,
       data,
@@ -117,7 +120,10 @@ export class OrderService {
    * @param {TOrderUpdateData}fields объект полей, которые нужно обновить в заявке
    * @returns {Promise<boolean>} Результат обновления, true если заявка найдена и обновлена
    */
-  public async update(id: number | string, fields: TOrderUpdateData): Promise<boolean> {
+  public async update(
+    id: number | string,
+    fields: TOrderUpdateData,
+  ): Promise<boolean> {
     const params: TOrderUpdate =
       typeof id === "number"
         ? { id: id, data: fields }
@@ -139,15 +145,22 @@ export class OrderService {
    * @param note Текст комментария
    * @returns
    */
-  public async addNote(orderId: IOrder["id"], note: IOrder["comment"]): Promise<IAddNoteResponse> {
-    const response = await this.axiosInstance.post<IAddNoteResponse>(ENDPOINTS.ORDER.NOTE, {
-      orderId,
-      note,
-    });
-    if (!response.data.success) throw new SalesDriveError({
-      message: response.data.message,
-      response: { status: 400, data: { message: response.data.message } },
-    } as AxiosError<ApiErrorData>);
+  public async addNote(
+    orderId: IOrder["id"],
+    note: IOrder["comment"],
+  ): Promise<IAddNoteResponse> {
+    const response = await this.axiosInstance.post<IAddNoteResponse>(
+      ENDPOINTS.ORDER.NOTE,
+      {
+        orderId,
+        note,
+      },
+    );
+    if (!response.data.success)
+      throw new SalesDriveError({
+        message: response.data.message,
+        response: { status: 400, data: { message: response.data.message } },
+      } as AxiosError<ApiErrorData>);
     return response.data;
   }
 }

@@ -14,6 +14,9 @@ export class DocumentQueryBuilder<
   }
 
   protected fetch(): Promise<TResponse> {
-    return this.documentService.fetchDocuments(this.endpoint, this.params) as Promise<TResponse>;
+    return this.documentService.fetchDocuments(
+      this.endpoint,
+      this.params,
+    ) as Promise<TResponse>;
   }
 }

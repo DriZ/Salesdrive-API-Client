@@ -41,4 +41,6 @@ export interface IGetManagerByPhoneErrorResponse {
 /**
  * Тип ответа поиска менеджера (успех или ошибка).
  */
-export type TGetManagerByPhoneResponse = IGetManagerByPhoneResponse | IGetManagerByPhoneErrorResponse;
+export type TGetManagerByPhoneResponse =
+  | IGetManagerByPhoneResponse
+  | IGetManagerByPhoneErrorResponse;
