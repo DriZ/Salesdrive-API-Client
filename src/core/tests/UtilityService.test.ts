@@ -54,10 +54,7 @@ describe("UtilityService", () => {
 
   describe("getPaymentMethods", () => {
     it("should fetch payment methods successfully", async () => {
-      const mockData = {
-        success: true,
-        data: [{ id: 1, name: "Cash", parameter: "cash" }],
-      };
+      const mockData = [{ id: 1, name: "Cash", parameter: "cash" }];
       mockAxios.get.mockResolvedValue({ data: mockData });
 
       const result = await service.getPaymentMethods();
@@ -69,10 +66,7 @@ describe("UtilityService", () => {
 
   describe("getDeliveryMethods", () => {
     it("should fetch delivery methods successfully", async () => {
-      const mockData = {
-        success: true,
-        data: [{ id: 1, name: "Nova Poshta", parameter: "np" }],
-      };
+      const mockData = [{ id: 1, name: "Nova Poshta", parameter: "np" }];
       mockAxios.get.mockResolvedValue({ data: mockData });
 
       const result = await service.getDeliveryMethods();
@@ -84,10 +78,7 @@ describe("UtilityService", () => {
 
   describe("getStatuses", () => {
     it("should fetch statuses successfully", async () => {
-      const mockData = {
-        success: true,
-        data: [{ id: 1, name: "New", type: 1 }],
-      };
+      const mockData = [{ id: 1, name: "New", type: 1 }];
       mockAxios.get.mockResolvedValue({ data: mockData });
 
       const result = await service.getStatuses();
